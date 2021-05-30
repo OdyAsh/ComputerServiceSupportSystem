@@ -1,12 +1,12 @@
 /*
  * Group 1: Computer Service Support System (24)
  */
-package UserInfo;
+package User.CustomerGUI;
 
 /**
  *
  * @author Ash
  */
-public class Address {
+public class ValidatePayment {
     
 }
