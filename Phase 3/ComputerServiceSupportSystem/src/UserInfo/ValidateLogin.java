@@ -13,7 +13,7 @@ public class ValidateLogin {
     private Account acc;
     private Person p;
     
-    ValidateLogin() {
+    public ValidateLogin() {
         this.acc = new Account();
     }
     

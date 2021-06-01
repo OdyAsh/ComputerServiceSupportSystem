@@ -27,29 +27,33 @@ public class Bank {
         conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
     }
     
-    public Bank(String bankName) {       
+    public Bank(String bankName) throws SQLException {      
+        conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
         this.bankName = bankName;
         creditCard = new ArrayList<>();
         
     }
     
-    public boolean checkCredit(int customerId, int cardNumber, int partPrice) throws SQLException {
-           
-        ResultSet rs = null;
+    public int checkCredit(int customerId, int cardNumber, int partPrice) throws SQLException {   
         String sql = "SELECT * FROM CREDIT WHERE CustomerID=?";
+        int isValid;
         ps = conn.prepareStatement(sql);
         ps.setInt(1, customerId);
-        rs = ps.executeQuery(sql);
-        if (rs.next() && rs.getInt("CardNumber") == cardNumber && rs.getInt("Balance") >= partPrice) {
-            LocalDate expDate = rs.getObject("ExpirationDate", LocalDate.class);
-            LocalDate currDate = LocalDate.now();
-            ps.close();
-            conn.close();
-            return (expDate.compareTo(currDate) <= 0) ? true : false;
+        ResultSet rs = ps.executeQuery(sql);
+        if (rs.next()) {
+            if (rs.getInt("CardNumber") == cardNumber) {
+                if (rs.getInt("Balance") >= partPrice) {
+                    LocalDate expDate = rs.getObject("ExpirationDate", LocalDate.class);
+                    LocalDate currDate = LocalDate.now();
+                    isValid = (expDate.compareTo(currDate) <= 0) ? 1 : -4;
+                } else {
+                    isValid = -3;
+                }
+            } else {
+                isValid = -2;
+            }
         } else {
-            ps.close();
-            conn.close();
-            return false;
+            isValid = -1;
         }
     }
     

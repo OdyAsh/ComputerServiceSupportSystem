@@ -3,6 +3,12 @@
  */
 package User.CustomerGUI;
 
+import User.Customer;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Ash
@@ -12,9 +18,24 @@ public class OrderCreationUI extends javax.swing.JFrame {
     /**
      * Creates new form OrderCreationUI
      */
+    ValidateOrder vo;
+    ValidatePayment vp;
+    private String part;
+    private int price;
+    private int cardNumber;
+    private String paymentType;
+    private int isValidCreditCard;
     
     public OrderCreationUI() {
         initComponents();
+        customerIdLabel.setText("id here");
+    }
+    
+    public OrderCreationUI(Customer c) {
+        vo = new ValidateOrder(c);
+        vp = new ValidatePayment(c);
+        initComponents();
+        customerIdLabel.setText(String.valueOf(vo.getPid()));
     }
     
     
@@ -41,12 +62,19 @@ public class OrderCreationUI extends javax.swing.JFrame {
         cardNumberField = new javax.swing.JTextField();
         submitButton = new javax.swing.JButton();
         priceDisplayLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Create an order");
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         paymentMethodLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         paymentMethodLabel.setText("Payment Method");
+        paymentMethodLabel.setEnabled(false);
 
         customerIdLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         customerIdLabel.setText("...");
@@ -61,28 +89,72 @@ public class OrderCreationUI extends javax.swing.JFrame {
                 partNameFieldFocusLost(evt);
             }
         });
+        partNameField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                partNameFieldMouseClicked(evt);
+            }
+        });
+        partNameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                partNameFieldActionPerformed(evt);
+            }
+        });
 
-        priceLabel.setText("Price:");
+        priceLabel.setText("Price (EGP):");
 
         formName1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         formName1.setText("Order Creation Form");
 
         cashOrCreditGroup.add(cashRadioButton);
         cashRadioButton.setText("Cash");
+        cashRadioButton.setEnabled(false);
+        cashRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cashRadioButtonActionPerformed(evt);
+            }
+        });
 
         cashOrCreditGroup.add(creditRadioButton);
         creditRadioButton.setText("Credit");
+        creditRadioButton.setEnabled(false);
+        creditRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creditRadioButtonActionPerformed(evt);
+            }
+        });
 
         cardNumberLabel.setText("Card number:");
         cardNumberLabel.setEnabled(false);
 
         cardNumberField.setText("...");
         cardNumberField.setEnabled(false);
+        cardNumberField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cardNumberFieldFocusLost(evt);
+            }
+        });
+        cardNumberField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cardNumberFieldActionPerformed(evt);
+            }
+        });
 
         submitButton.setText("Submit");
         submitButton.setEnabled(false);
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitButtonActionPerformed(evt);
+            }
+        });
 
         priceDisplayLabel.setText("...");
+
+        jButton1.setText("Cancel");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -92,12 +164,6 @@ public class OrderCreationUI extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(paymentMethodLabel)
                 .addGap(187, 187, 187))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(yourId)
-                .addGap(39, 39, 39)
-                .addComponent(customerIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(174, 174, 174))
             .addGroup(layout.createSequentialGroup()
                 .addGap(95, 95, 95)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -114,9 +180,9 @@ public class OrderCreationUI extends javax.swing.JFrame {
                             .addComponent(creditRadioButton)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(priceLabel)
-                                .addGap(26, 26, 26)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(priceDisplayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(70, 70, 70))))
+                        .addGap(84, 84, 84))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -128,6 +194,17 @@ public class OrderCreationUI extends javax.swing.JFrame {
                         .addGap(134, 134, 134)
                         .addComponent(formName1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(yourId)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(customerIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(201, 201, 201))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,15 +233,115 @@ public class OrderCreationUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cardNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(submitButton))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    public String getPartInfo() {
+        return partNameField.getText();
+    }
+    public String getPaymentMethod() {
+        return cashOrCreditGroup.getSelection().getActionCommand();
+    }
+    public int getCardNumber() {
+        try {
+            int cn = Integer.parseInt(cardNumberField.getText());
+            return cn;
+        } catch (NumberFormatException nfe) {
+            throw new NumberFormatException("Please don't enter characters other than integers");
+        }
+    }
     private void partNameFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partNameFieldFocusLost
-        // TODO add your handling code here:
+        part = getPartInfo();
+        try {
+            price = vo.checkPartAvailability(part);
+            if (price != -1) {
+                priceDisplayLabel.setText(String.valueOf(price));
+                paymentMethodLabel.setEnabled(true);
+                cashRadioButton.setEnabled(true);
+                creditRadioButton.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Part not found", "Empty Field", JOptionPane.ERROR_MESSAGE);
+                priceDisplayLabel.setText("...");
+                paymentMethodLabel.setEnabled(false);
+                cashRadioButton.setEnabled(false);
+                creditRadioButton.setEnabled(false);
+                submitButton.setEnabled(false);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Empty Field", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_partNameFieldFocusLost
+    
+    private void creditRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creditRadioButtonActionPerformed
+        creditRadioButton.setActionCommand(creditRadioButton.getText());
+        cardNumberLabel.setEnabled(true);
+        cardNumberField.setEnabled(true);
+    }//GEN-LAST:event_creditRadioButtonActionPerformed
+
+    private void cashRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cashRadioButtonActionPerformed
+        cashRadioButton.setActionCommand(cashRadioButton.getText());
+        cardNumberLabel.setEnabled(false);
+        cardNumberField.setEnabled(false);
+        submitButton.setEnabled(true);
+    }//GEN-LAST:event_cashRadioButtonActionPerformed
+
+    private void cardNumberFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cardNumberFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cardNumberFieldActionPerformed
+
+    private void cardNumberFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cardNumberFieldFocusLost
+        if (cardNumberField.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "You have to enter a card number...", "Empty Field", JOptionPane.WARNING_MESSAGE);
+        } else {
+            try {
+                cardNumber = getCardNumber();
+                submitButton.setEnabled(true);
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(this, nfe.getMessage(), "Empty Field", JOptionPane.ERROR_MESSAGE);
+                submitButton.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_cardNumberFieldFocusLost
+
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        paymentType = getPaymentMethod();
+        if (paymentType.equals("Credit")) {
+            try {
+                isValidCreditCard = vp.checkCredit(vp.getPid(), cardNumber, price);
+                if (isValidCreditCard != 1) {
+                    JOptionPane.showMessageDialog(this, vp.returnErrorMessage(), "Credit card issue", JOptionPane.ERROR_MESSAGE);
+                } else if (isValidCreditCard == 1) {
+                    
+                }   
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "There was a problem accessing the Bank's database, try later...", "Empty Field", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_submitButtonActionPerformed
+
+    private void partNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partNameFieldActionPerformed
+
+    }//GEN-LAST:event_partNameFieldActionPerformed
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        partNameField.setFocusable(false); //removes focus from textField when mouse is clicked anywhere else
+        
+    }//GEN-LAST:event_formMouseClicked
+
+    private void partNameFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_partNameFieldMouseClicked
+         partNameField.setFocusable(true); //make the field focusable again when customer clicks on it
+         partNameField.requestFocusInWindow(); //moves the mouse cursor to the field to avoid clicking the field twice
+    }//GEN-LAST:event_partNameFieldMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        HomeCustomer hc = new HomeCustomer(vo.getCustomer());
+        hc.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,6 +386,7 @@ public class OrderCreationUI extends javax.swing.JFrame {
     private javax.swing.JRadioButton creditRadioButton;
     private javax.swing.JLabel customerIdLabel;
     private javax.swing.JLabel formName1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JTextField partNameField;
     private javax.swing.JLabel partNameLabel;
     private javax.swing.JLabel paymentMethodLabel;

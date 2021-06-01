@@ -4,6 +4,11 @@
 package UserInfo;
 
 import User.Admin;
+import User.Customer;
+import User.CustomerGUI.HomeCustomer;
+import User.Person;
+import User.Technician;
+import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -168,47 +173,74 @@ public class LoginGUI extends javax.swing.JFrame {
     private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordFieldActionPerformed
-
-    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        String uUserNameEmail = usernameEmailField.getText();
+    
+    public String getUsernameOrEmail() {
+        return usernameEmailField.getText();
+    }
+    public String getPassword() {
         char[] uPassChars = passwordField.getPassword();
         String uPass = String.copyValueOf(uPassChars);
+        return uPass;
+    }
+    public void loginConfirmationMessage(Person p) {
+        if (p != null) {
+                JOptionPane.showMessageDialog(this, "login Successful!\nTaking you to home page...");
+                if (adminRadioButton.isSelected()) {
+                    Admin ad = (Admin) p;
+                    HomeAdmin ha = new HomeAdmin(ad);
+                    ha.setVisible(true);
+                    this.dispose();
+                } else if (technicianRadioButton.isSelected()) {
+                    Technician te = (Technician) p;
+                    HomeTechnician ht = new HomeTechnician(te);
+                    ht.setVisible(true);
+                    this.dispose();
+                } else if (customerRadioButton.isSelected()) {
+                    Customer cu = (Customer) p;
+                    HomeCustomer hc = new HomeCustomer(cu);
+                    hc.setVisible(true);
+                    this.dispose();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Entered account info wasn't found...", "Account not found", JOptionPane.ERROR_MESSAGE);
+            }
+    }
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        String uUserNameEmail = getUsernameOrEmail();
+        String uPass = getPassword();
         
         if (uUserNameEmail.equals("") || uPass.equals("")) {
             JOptionPane.showMessageDialog(this, "One of the fields are empty...", "Invalid input", JOptionPane.ERROR_MESSAGE);
         }
         else {
-            
             String userType = userTypeGroup.getSelection().getActionCommand(); //gets string associated with radio button
             vl.setPerson(vl.login(uUserNameEmail, uPass, userType));
-            if (vl.getPerson() != null) {
-                JOptionPane.showMessageDialog(this, "login Successful!\nTaking you to home page...");
-                if (adminRadioButton.isSelected()) {
-                    
-                } else if (technicianRadioButton.isSelected()) {
-                    
-                } else if (customerRadioButton.isSelected()) {
-                    
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Entered account info wasn't found...", "Account not found", JOptionPane.ERROR_MESSAGE);
-            }
+            Person p = vl.getPerson();
+            loginConfirmationMessage(p);
         }
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void adminRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminRadioButtonActionPerformed
-        if (adminRadioButton.isSelected())
+        if (adminRadioButton.isSelected()) {
             loginButton.setEnabled(true);
+            adminRadioButton.setActionCommand(adminRadioButton.getText()); //sets the actionCommand of this radioButton object, to retrieve that string when logging in
+        }
+            
     }//GEN-LAST:event_adminRadioButtonActionPerformed
 
     private void technicianRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_technicianRadioButtonActionPerformed
-        if (technicianRadioButton.isSelected())
+        if (technicianRadioButton.isSelected()) {
             loginButton.setEnabled(true);
+            technicianRadioButton.setActionCommand(technicianRadioButton.getText());
+        }
+            
     }//GEN-LAST:event_technicianRadioButtonActionPerformed
 
     private void customerRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerRadioButtonActionPerformed
-        if (customerRadioButton.isSelected())
+        if (customerRadioButton.isSelected()) {
             loginButton.setEnabled(true);
+            customerRadioButton.setActionCommand(customerRadioButton.getText());
+        }
     }//GEN-LAST:event_customerRadioButtonActionPerformed
 
     /**

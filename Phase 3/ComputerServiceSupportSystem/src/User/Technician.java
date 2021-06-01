@@ -7,6 +7,6 @@ package User;
  *
  * @author Ash
  */
-public class Technician {
+public class Technician extends Person {
     
 }
