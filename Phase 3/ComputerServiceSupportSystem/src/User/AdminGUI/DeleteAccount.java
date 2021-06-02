@@ -4,7 +4,7 @@
 package User.AdminGUI;
 
 import User.Admin;
-import User.AdminControler;
+import User.AdminGUI.AdminController;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * @author infolos
  */
 public class DeleteAccount extends javax.swing.JFrame {
-    AdminControler currentUser= null;
+    AdminController currentUser= null;
     /**
      * Creates new form DeleteAccount
      */

@@ -4,7 +4,7 @@
 package User.AdminGUI;
 
 import User.Admin;
-import User.AdminControler;
+import User.AdminGUI.AdminController;
 import UserInfo.Order;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  * @author infolos
  */
 public class GenerateReport extends javax.swing.JFrame {
-    AdminControler currentUser;
+    AdminController currentUser;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate localDate;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -127,11 +127,11 @@ public class GenerateReport extends javax.swing.JFrame {
         if(date == ""){
             JOptionPane.showMessageDialog(this, "You should specify a date"); 
         }else{
-            testTemp = currentUser.getCurrentAdmin().generateReport(localDate,value);
-            if(testTemp == null){
+            currentUser.setTempOrders(localDate, date);
+            if(currentUser.getTempOrders() == null){
                 JOptionPane.showMessageDialog(this, "There are no orders in this date");
             }else{
-                ReportViewer rv = new ReportViewer(localDate,value,testTemp);
+                ReportViewer rv = new ReportViewer(localDate,value,currentUser.getTempOrders());
                 rv.setVisible(true);
             }
         }

@@ -4,10 +4,14 @@
 package UserInfo;
 
 import User.Admin;
+import User.AdminGUI.HomeAdmin;
 import User.Customer;
 import User.CustomerGUI.HomeCustomer;
 import User.Person;
 import User.Technician;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
 
@@ -21,7 +25,7 @@ public class LoginGUI extends javax.swing.JFrame {
      * Creates new form LoginGUI
      */
     ValidateLogin vl;
-    public LoginGUI() {
+    public LoginGUI() throws SQLException {
         vl = new ValidateLogin();
         initComponents();
     }
@@ -214,7 +218,11 @@ public class LoginGUI extends javax.swing.JFrame {
         }
         else {
             String userType = userTypeGroup.getSelection().getActionCommand(); //gets string associated with radio button
-            vl.setPerson(vl.login(uUserNameEmail, uPass, userType));
+            try {
+                vl.login(uUserNameEmail, uPass, userType);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Problem", JOptionPane.ERROR_MESSAGE);
+            }
             Person p = vl.getPerson();
             loginConfirmationMessage(p);
         }

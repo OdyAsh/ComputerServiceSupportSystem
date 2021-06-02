@@ -5,6 +5,7 @@ package User.CustomerGUI;
 
 import User.Customer;
 import UserInfo.LoginGUI;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -144,10 +145,14 @@ public class HomeCustomer extends javax.swing.JFrame {
     }//GEN-LAST:event_manageOrdersActionPerformed
 
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
-        LoginGUI login = new LoginGUI();
-        JOptionPane.showMessageDialog(this, "Thank you for using our system!");
-        login.setVisible(true);
-        this.dispose();
+        try {
+            LoginGUI login = new LoginGUI();
+            JOptionPane.showMessageDialog(this, "Thank you for using our system!");
+            login.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error returning to login page...", "Program Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_logOutActionPerformed
 
     /**

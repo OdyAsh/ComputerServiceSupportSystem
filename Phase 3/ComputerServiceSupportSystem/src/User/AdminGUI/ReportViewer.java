@@ -28,7 +28,7 @@ public class ReportViewer extends javax.swing.JFrame {
         date.setText(String.valueOf(dateCom));
         status.setText(statusCom);
         for(int i = 0; i < receivedFinal.size(); i++){
-         model.addRow(new Object[]{receivedFinal.get(i).getId(),receivedFinal.get(i).getPrice(),receivedFinal.get(i).getCreationDate(),receivedFinal.get(i).getStatus()});
+         model.addRow(new Object[]{receivedFinal.get(i).getOrderId(),receivedFinal.get(i).getPrice(),receivedFinal.get(i).getCreationDate(),receivedFinal.get(i).getStatus()});
         }
         model.addRow(new Object[]{"TotalOrders: ",receivedFinal.size()});
         initComponents();
@@ -99,11 +99,12 @@ public class ReportViewer extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(date)
-                    .addComponent(jLabel2)
-                    .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(status, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(date)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())

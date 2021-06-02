@@ -24,7 +24,7 @@ public class OrderCreationUI extends javax.swing.JFrame {
     private int price;
     private int cardNumber;
     private String paymentType;
-    private int isValidCreditCard;
+    private int notValidOrBalance;
     
     public OrderCreationUI() {
         initComponents();
@@ -311,12 +311,22 @@ public class OrderCreationUI extends javax.swing.JFrame {
         paymentType = getPaymentMethod();
         if (paymentType.equals("Credit")) {
             try {
-                isValidCreditCard = vp.checkCredit(vp.getPid(), cardNumber, price);
-                if (isValidCreditCard != 1) {
+                notValidOrBalance = vp.checkCredit(vp.getPid(), cardNumber, price);
+                if (notValidOrBalance < 0) {
                     JOptionPane.showMessageDialog(this, vp.returnErrorMessage(), "Credit card issue", JOptionPane.ERROR_MESSAGE);
-                } else if (isValidCreditCard == 1) {
-                    
+                } else {
+                    String orderConfirmation = vo.createOrder(vo.getPid(), part, price);
+                    orderConfirmation += "\nPlease visit the nearest branch to deliver us the part that you want to repair.";
+                    JOptionPane.showMessageDialog(this, orderConfirmation, "Order Created!", JOptionPane.INFORMATION_MESSAGE);
                 }   
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "There was a problem accessing the Bank's database, try later...", "Empty Field", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (paymentType.equals("Cash")) {
+            try { 
+                String orderConfirmation = vo.createOrder(vo.getPid(), part, price);
+                orderConfirmation += "\nNote, since you're paying with cash, please visit the nearest branch \nto pay and give us the part that you want to repair.";
+                JOptionPane.showMessageDialog(this, orderConfirmation, "Order Created!", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "There was a problem accessing the Bank's database, try later...", "Empty Field", JOptionPane.ERROR_MESSAGE);
             }

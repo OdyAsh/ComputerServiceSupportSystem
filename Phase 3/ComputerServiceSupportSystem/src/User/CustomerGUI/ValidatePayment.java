@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class ValidatePayment {
     private Customer c;
     private Bank b;
-    private int isValidCredit;
+    private int notValidOrBalance;
     public ValidatePayment() {
         this.c = new Customer();
     }
@@ -24,8 +24,8 @@ public class ValidatePayment {
     }
     
     public int checkCredit(int customerId, int cardNumber, int partPrice) throws SQLException {
-        isValidCredit = b.checkCredit(customerId, cardNumber, partPrice);
-        return isValidCredit;
+        notValidOrBalance = b.checkCredit(customerId, cardNumber, partPrice);
+        return notValidOrBalance;
     }
     
     //-1: Customer doesn't have credit
@@ -35,7 +35,7 @@ public class ValidatePayment {
     //1: Credit is elligible, 
     //so order will be created via ValidateOrder controller and part price will be withdrawn via this controller
     public String returnErrorMessage() {
-        switch (isValidCredit) {
+        switch (notValidOrBalance) {
             case -1:
                 return "Your credit card isn't stored in our registered banks...";
             case -2:
@@ -45,8 +45,8 @@ public class ValidatePayment {
             case -4:
                 return "Unfortunately, your credit card has expired...";
             default:
-                break;
-        }
+                return null;
+        }  
     }
     
     public Customer getCustomer() {

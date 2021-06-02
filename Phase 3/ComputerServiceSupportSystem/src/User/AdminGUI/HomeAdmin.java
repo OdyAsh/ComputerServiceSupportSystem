@@ -4,7 +4,7 @@
 package User.AdminGUI;
 
 import User.Admin;
-import User.AdminControler;
+import User.AdminGUI.AdminController;
 import UserInfo.LoginGUI;
 
 /**
@@ -12,7 +12,7 @@ import UserInfo.LoginGUI;
  * @author infolos
  */
 public class HomeAdmin extends javax.swing.JFrame {
-    AdminControler currentUser= null;
+    AdminController currentUser= null;
     /**
      * Creates new form HomeAdmin
      */
@@ -168,7 +168,9 @@ public class HomeAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_DeleteAccountActionPerformed
 
     private void ReportGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReportGenerateActionPerformed
-        // TODO add your handling code here:
+        GenerateReport gr = new GenerateReport(currentUser.getCurrentAdmin());
+        gr.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_ReportGenerateActionPerformed
 
     /**

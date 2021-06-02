@@ -10,9 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Ash
@@ -35,26 +32,32 @@ public class Bank {
     }
     
     public int checkCredit(int customerId, int cardNumber, int partPrice) throws SQLException {   
-        String sql = "SELECT * FROM CREDIT WHERE CustomerID=?";
-        int isValid;
+        String sql = "SELECT * FROM CREDIT WHERE CUSTOMERID=?";
+        int notValidOrBalance;
         ps = conn.prepareStatement(sql);
         ps.setInt(1, customerId);
         ResultSet rs = ps.executeQuery(sql);
         if (rs.next()) {
-            if (rs.getInt("CardNumber") == cardNumber) {
-                if (rs.getInt("Balance") >= partPrice) {
-                    LocalDate expDate = rs.getObject("ExpirationDate", LocalDate.class);
+            if (rs.getInt("CARDNUMBER") == cardNumber) {
+                if (rs.getInt("BALANCE") >= partPrice) {
+                    LocalDate expDate = rs.getObject("EXPIRATIONDATE", LocalDate.class);
                     LocalDate currDate = LocalDate.now();
-                    isValid = (expDate.compareTo(currDate) <= 0) ? 1 : -4;
+                    if (expDate.compareTo(currDate) <= 0) {
+                        Credit cr = new Credit();
+                        notValidOrBalance = cr.withdraw(customerId, partPrice);
+                    } else {
+                        notValidOrBalance = -4;
+                    }
                 } else {
-                    isValid = -3;
+                    notValidOrBalance = -3;
                 }
             } else {
-                isValid = -2;
+                notValidOrBalance = -2;
             }
         } else {
-            isValid = -1;
+            notValidOrBalance = -1;
         }
+        return notValidOrBalance;
     }
     
     public String getBankName() {

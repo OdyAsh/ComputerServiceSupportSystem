@@ -1,4 +1,4 @@
-package Order;
+package UserInfo;
 
 import java.time.LocalDate;
 
@@ -56,6 +56,7 @@ public class Order {
     /**
      * Setters are missing creation date setter because it should only be created when the constructor is called
      * Hence protecting the data from being manipulated unreasonably
+     * @param comment
      */
     public void setComment(String comment) {
         this.comment = comment;
@@ -66,11 +67,17 @@ public class Order {
     public void customerId (int id){
         customerId = id;
     }
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
     public void setPrice(int price) {
         this.price = price;
     }
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+    public void setCreationDate(LocalDate ld) {
+    this.creationDate = ld;
     }
     /*Tech Id setter
     public boolean assignToTechnician(int orderId) {
@@ -103,5 +110,7 @@ public class Order {
     public int getTechnicianId() {
         return technicianId;
     }
+
+
 
 }

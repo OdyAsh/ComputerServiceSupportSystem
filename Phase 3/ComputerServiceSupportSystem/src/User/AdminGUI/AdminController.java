@@ -1,18 +1,31 @@
 /*
  * Group 1: Computer Service Support System (24)
  */
-package User;
+package User.AdminGUI;
+
+import User.Admin;
+import UserInfo.Order;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  *
  * @author infolos
  */
-public class AdminControler {
+public class AdminController {
     private Admin currentAdmin;
-
-    public AdminControler(Admin currentAdmin) {
+    private ArrayList<Order> tempOrd = null;
+    public AdminController(Admin currentAdmin) {
         this.currentAdmin = currentAdmin;
     }
+    public ArrayList<Order> getTempOrders() {
+        return tempOrd;
+    }
+
+    public void setTempOrders(LocalDate date,String Status) {
+        tempOrd = this.getCurrentAdmin().generateReport(date, Status);
+    }
+    
 
     public Admin getCurrentAdmin() {
         return currentAdmin;

@@ -4,7 +4,7 @@
 package User.AdminGUI;
 
 import User.Admin;
-import User.AdminControler;
+import User.AdminGUI.AdminController;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * @author infolos
  */
 public class ModifyAccount extends javax.swing.JFrame {
-    AdminControler currentUser= null;
+    AdminController currentUser= null;
     /**
      * Creates new form ModifyAccount
      */
@@ -21,9 +21,9 @@ public class ModifyAccount extends javax.swing.JFrame {
     }
     public ModifyAccount(Admin ad){
         currentUser.setCurrentAdmin(ad);
-        UpdateSalary.setVisible(false);
-        NewSalary.setVisible(false);
-        jLabel2.setVisible(false);
+        UpdateSalary.setEnabled(false);
+        NewSalary.setEnabled(false);
+        jLabel2.setVisible(true);
         initComponents();
     }
 
@@ -127,8 +127,8 @@ public class ModifyAccount extends javax.swing.JFrame {
             boolean test = currentUser.getCurrentAdmin().searchAccounts(id);
             if(test){
                 AccountID.setEnabled(false);
-                UpdateSalary.setVisible(false);
-                NewSalary.setVisible(false);
+                UpdateSalary.setEnabled(true);
+                NewSalary.setEnabled(true);
             }else{
                 JOptionPane.showMessageDialog(this, "There is no technician with this account id");
             }
@@ -141,7 +141,7 @@ public class ModifyAccount extends javax.swing.JFrame {
         }else{
             int salary = Integer.parseInt(NewSalary.getText());
             int id = Integer.parseInt(AccountID.getText());
-            currentUser.getCurrentAdmin().UpdateSalar(id, salary);
+            currentUser.getCurrentAdmin().UpdateSalary(id, salary);
             JOptionPane.showMessageDialog(this, "Records updated succesffuly!");
         }
     }//GEN-LAST:event_UpdateSalaryActionPerformed

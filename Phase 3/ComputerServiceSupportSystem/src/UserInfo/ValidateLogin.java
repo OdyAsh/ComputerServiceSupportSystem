@@ -4,6 +4,9 @@
 package UserInfo;
 
 import User.Person;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,12 +16,16 @@ public class ValidateLogin {
     private Account acc;
     private Person p;
     
-    public ValidateLogin() {
+    public ValidateLogin() throws SQLException {
         this.acc = new Account();
     }
     
-    public Person login(String uUserNameEmail, String uPassword, String userType) {
-        p = acc.login(uUserNameEmail, uPassword, userType); //userType is either: "Admin", "Technician", or "Customer"
+    public Person login(String uUserNameEmail, String uPassword, String userType) throws SQLException {
+        try {
+            p = acc.login(uUserNameEmail, uPassword, userType); //userType is either: "Admin", "Technician", or "Customer"
+        } catch (SQLException ex) {
+            throw new SQLException("Error accessing the database. Try again later...");
+        }
         if (p == null) {
             return null;
         } else {

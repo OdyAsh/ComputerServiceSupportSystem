@@ -4,7 +4,7 @@
 package User.AdminGUI;
 
 import User.Admin;
-import User.AdminControler;
+import User.AdminGUI.AdminController;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * @author infolos
  */
 public class AddAccount extends javax.swing.JFrame {
-    AdminControler currentUser= null;
+    AdminController currentUser= null;
     /**
      * Creates new form AddAccount
      */
@@ -22,8 +22,8 @@ public class AddAccount extends javax.swing.JFrame {
     }
     public AddAccount(Admin ad) {
         currentUser.setCurrentAdmin(ad);
-        MaxOrderCapacity.setVisible(false);
-        Salary.setVisible(false);
+        MaxOrderCapacity.setEnabled(false);
+        Salary.setEnabled(false);
         initComponents();
     }
 
@@ -203,8 +203,8 @@ public class AddAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please fill all fields");
         }else{
             if(type == "Technician"){
-                MaxOrderCapacity.setVisible(true);
-                Salary.setVisible(true);
+                MaxOrderCapacity.setEnabled(true);
+                Salary.setEnabled(true);
                 if(MaxOrderCapacity.equals("") || Salary.equals("")){
                     JOptionPane.showMessageDialog(this, "Please Specify Max order capcity and Salary"); 
                 }else{
@@ -263,7 +263,7 @@ public class AddAccount extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AddAccount(currentUser.getCurrentAdmin()).setVisible(true);
+                new AddAccount().setVisible(true);
             }
         });
     }

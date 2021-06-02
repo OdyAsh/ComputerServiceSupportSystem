@@ -1,5 +1,7 @@
 /*
- * Group 1: Computer Service Support System (24)
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package UserInfo;
 
@@ -13,22 +15,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- *
- * @author Ash
- */
 public class Account {
-    private String userame;
-    private String email; 
-    private String password;
-    Connection conn = null;
-    PreparedStatement ps = null;
+private String Email; 
+private String Username;
+private String Password;
+private String userType;
     
-    public Account() throws SQLException {
+Connection conn =null;
+PreparedStatement ps = null;
+   
+   public Account() throws SQLException {
         conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
-    }
-    
-    public Person login(String uUserNameEmail, String uPassword, String userType) throws SQLException {
+   }
+   public Account( String Email,String Username,String Password){
+       this.Email = Email;
+       this.Username = Username;
+       this.Password = Password;
+   }
+   
+   public Person login(String uUserNameEmail, String uPassword, String userType) throws SQLException {
         String sqlValidator = "SELECT * FROM ACCOUNT WHERE (USERNAME=? OR EMAIL=?) AND PASSWORD=?";
         ps = conn.prepareStatement(sqlValidator);
         ps.setString(1, uUserNameEmail);
@@ -40,7 +45,7 @@ public class Account {
             acc.setUsername(rs.getString("USERNAME"));
             acc.setEmail(rs.getString("EMAIL"));
             acc.setPassword(uPassword);
-            acc.setUsertype(userType);
+            acc.setUserType(userType);
             int pid = rs.getInt("PID");
             String pData = "SELECT * FROM PERSON p, ? x WHERE p.PID = ? AND p.PID = x.PID";
             ps = conn.prepareStatement(pData);
@@ -80,4 +85,39 @@ public class Account {
         } 
         return null;
     }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String Email) {
+        this.Email = Email;
+    }
+
+    public String getUsername() {
+        return Username;
+    }
+
+    public void setUsername(String Username) {
+        this.Username = Username;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String Password) {
+        this.Password = Password;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+    
+    
+   
 }

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,11 +22,11 @@ import java.util.logging.Logger;
 public class Admin extends Person{
     Connection conncat = null;
     java.sql.Statement stcat = null;
-    Admin(){
+    public Admin(){
        try{
            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
            stcat = conncat.createStatement();
-           System.out.println("Database connected succesffuly");
+           System.out.println("Database connected successfully");
        }catch(SQLException ex){
            System.out.println("Database connection failed");
        }
@@ -81,7 +82,7 @@ public class Admin extends Person{
             return false;
         }
     }
-    public void UpdateSalar(int id, int Salary){
+    public void UpdateSalary(int id, int Salary){
         try {
             String sqlSalaryUpdate = "UPDATE TECHNICIAN SET SALARY = "+Salary+" WHERE PID="+id;
             stcat.executeUpdate(sqlSalaryUpdate);
@@ -97,16 +98,16 @@ public class Admin extends Person{
         Order temp = new Order();
         ResultSet rs;
         try {
-            String sql = "SELECT ORDERID,PRICE,STATUS,CREATIONDATE FROM ORDERS WHERE STATUS=? & CREATIONDATE <=?";
+            String sql = "SELECT ORDERID,PRICE,STATUS,CREATIONDATE FROM ORDERS WHERE STATUS=? & CREATIONDATE >=?";
             PreparedStatement stmt= conncat.prepareStatement(sql);
             stmt.setString(1, Status);
             stmt.setObject(2, date);
             rs = stmt.executeQuery();
             while(rs.next()){
-                temp.setId(rs.getInt("ORDERID"));
-                temp.setPrice(rs.getDouble("PRICE"));
+                temp.setOrderId(rs.getInt("ORDERID"));
+                temp.setPrice(rs.getInt("PRICE"));
                 temp.setStatus(rs.getString("STATUS"));
-                temp.setCreationDate(rs.getString("CREATIONDATE"));
+                temp.setCreationDate(rs.getObject("CREATIONDATE", LocalDateTime.class));
                 tempOrders.add(temp);
             }
             return tempOrders;
