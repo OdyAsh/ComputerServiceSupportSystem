@@ -206,12 +206,12 @@ public class AddAccount extends javax.swing.JFrame {
                 MaxOrderCapacity.setEnabled(true);
                 Salary.setEnabled(true);
                 if(MaxOrderCapacity.equals("") || Salary.equals("")){
-                    JOptionPane.showMessageDialog(this, "Please Specify Max order capcity and Salary"); 
+                    JOptionPane.showMessageDialog(this, "Please Specify Max order capacity and Salary"); 
                 }else{
                     // String Name, String Username,String Email, String Password,String Address,String AccountType,int ordersMaxCapacity,int Salary
                     boolean testQur = currentUser.getCurrentAdmin().addAccount(UserName, UserNickName, UserEmail, UserFinalPass, UserAddress, type, OrderMaxCapacity, UserSalary);
                     if(testQur){
-                        JOptionPane.showMessageDialog(this, "Technician got added Succesffuly"); 
+                        JOptionPane.showMessageDialog(this, "Technician got added Successfully"); 
                     }else{
                         JOptionPane.showMessageDialog(this, "Technician didn't get addded, check inputs"); 
                     }

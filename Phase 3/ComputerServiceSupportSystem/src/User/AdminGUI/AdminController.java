@@ -41,15 +41,15 @@ public class AdminController {
         return currentAdmin.getAddress();
     }
     public int getPersonId(){
-        return currentAdmin.getPID();
+        return currentAdmin.getPid();
     }
     public String getUserName(){
-        return currentAdmin.getUserName();
+        return currentAdmin.getAccount().getUsername();
     }
     public String getEmail(){
-        return currentAdmin.getEmail();
+        return currentAdmin.getAccount().getEmail();
     }
     public String getPassword(){
-        return currentAdmin.getPassword();
+        return currentAdmin.getAccount().getPassword();
     }
 }

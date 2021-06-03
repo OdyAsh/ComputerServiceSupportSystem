@@ -51,6 +51,11 @@ public class DeleteAccount extends javax.swing.JFrame {
         });
 
         Delete.setText("Delete");
+        Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteActionPerformed(evt);
+            }
+        });
 
         Cancel.setText("Cancel");
         Cancel.addActionListener(new java.awt.event.ActionListener() {
@@ -118,6 +123,10 @@ public class DeleteAccount extends javax.swing.JFrame {
         hd.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_CancelActionPerformed
+
+    private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DeleteActionPerformed
 
     /**
      * @param args the command line arguments

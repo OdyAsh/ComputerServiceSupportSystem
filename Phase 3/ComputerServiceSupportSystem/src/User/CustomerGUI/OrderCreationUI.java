@@ -3,6 +3,7 @@
  */
 package User.CustomerGUI;
 
+import ExceptionHandling.MyException;
 import User.Customer;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -26,9 +27,10 @@ public class OrderCreationUI extends javax.swing.JFrame {
     private String paymentType;
     private int notValidOrBalance;
     
-    public OrderCreationUI() {
+    public OrderCreationUI() throws SQLException {
         initComponents();
         customerIdLabel.setText("id here");
+        vo = new ValidateOrder();
     }
     
     public OrderCreationUI(Customer c) {
@@ -246,33 +248,39 @@ public class OrderCreationUI extends javax.swing.JFrame {
     public String getPaymentMethod() {
         return cashOrCreditGroup.getSelection().getActionCommand();
     }
-    public int getCardNumber() {
+    public int getCardNumber() throws MyException {
+        if (cardNumberField.getText().equals("")) {
+            throw new MyException("Please don't leave the field empty...");
+        }
         try {
             int cn = Integer.parseInt(cardNumberField.getText());
             return cn;
         } catch (NumberFormatException nfe) {
-            throw new NumberFormatException("Please don't enter characters other than integers");
+            throw new MyException("Please don't enter characters other than integers");
         }
     }
     private void partNameFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partNameFieldFocusLost
         part = getPartInfo();
         try {
             price = vo.checkPartAvailability(part);
-            if (price != -1) {
-                priceDisplayLabel.setText(String.valueOf(price));
-                paymentMethodLabel.setEnabled(true);
-                cashRadioButton.setEnabled(true);
-                creditRadioButton.setEnabled(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Part not found", "Empty Field", JOptionPane.ERROR_MESSAGE);
-                priceDisplayLabel.setText("...");
-                paymentMethodLabel.setEnabled(false);
-                cashRadioButton.setEnabled(false);
-                creditRadioButton.setEnabled(false);
-                submitButton.setEnabled(false);
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Empty Field", JOptionPane.WARNING_MESSAGE);
+            priceDisplayLabel.setText(String.valueOf(price));
+            paymentMethodLabel.setEnabled(true);
+            cashRadioButton.setEnabled(true);
+            creditRadioButton.setEnabled(true);  
+        } catch (MyException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Invalid input", JOptionPane.WARNING_MESSAGE);
+            priceDisplayLabel.setText("...");
+            paymentMethodLabel.setEnabled(false);
+            cashRadioButton.setEnabled(false);
+            creditRadioButton.setEnabled(false);
+            submitButton.setEnabled(false);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error accessing parts' database...", "Database Error", JOptionPane.WARNING_MESSAGE);
+            priceDisplayLabel.setText("...");
+            paymentMethodLabel.setEnabled(false);
+            cashRadioButton.setEnabled(false);
+            creditRadioButton.setEnabled(false);
+            submitButton.setEnabled(false);
         }
     }//GEN-LAST:event_partNameFieldFocusLost
     
@@ -294,16 +302,12 @@ public class OrderCreationUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cardNumberFieldActionPerformed
 
     private void cardNumberFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cardNumberFieldFocusLost
-        if (cardNumberField.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "You have to enter a card number...", "Empty Field", JOptionPane.WARNING_MESSAGE);
-        } else {
-            try {
-                cardNumber = getCardNumber();
-                submitButton.setEnabled(true);
-            } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(this, nfe.getMessage(), "Empty Field", JOptionPane.ERROR_MESSAGE);
-                submitButton.setEnabled(false);
-            }
+        try {
+            cardNumber = getCardNumber();
+            submitButton.setEnabled(true);
+        } catch (MyException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "invalid Input", JOptionPane.ERROR_MESSAGE);
+            submitButton.setEnabled(false);
         }
     }//GEN-LAST:event_cardNumberFieldFocusLost
 
@@ -383,7 +387,11 @@ public class OrderCreationUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new OrderCreationUI().setVisible(true);
+                try {
+                    new OrderCreationUI().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(OrderCreationUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

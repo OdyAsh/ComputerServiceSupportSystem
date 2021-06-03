@@ -3,6 +3,7 @@
  */
 package User.CustomerGUI;
 
+import ExceptionHandling.MyException;
 import User.Customer;
 import UserInfo.Order;
 import java.sql.SQLException;
@@ -14,18 +15,23 @@ import java.sql.SQLException;
 public class ValidateOrder {
     private Customer c;
     private Order o;
-    public ValidateOrder() {
+    public ValidateOrder() throws SQLException {
         this.c = new Customer();
     }
     
     public ValidateOrder(Customer c) {
         this.c = c;
     }
-    public int checkPartAvailability(String part) throws Exception, SQLException {
+    public int checkPartAvailability(String part) throws MyException, SQLException {
         if (part.equals(""))
-            throw new Exception("Can't leave this field empty!");
+            throw new MyException("Can't leave this field empty!");
         else {
-            return c.searchParts(part);
+            int price = c.searchParts(part);
+            if (price == -1) {
+                throw new MyException("Part not found");
+            } else {
+                return price;
+            }
         }
     }
     

@@ -40,15 +40,15 @@ public class Admin extends Person{
             rs.next();
             int id = rs.getInt("PID");
             id += 1;
-            String addUser = "INSERT INTO PERSON (PID,NAME,ADDRESS) VALUES('"+id+"','"+Name+"','"+Address+"')";
-            String addAccount = "INSERT INTO ACCOUNT (PID,USERNAME,EMAIL,PASSWORD,ACCOUNT_TYPE) VALUES('"+id+"','"+Username+"','"+Email+"','"+Password+"','"+AccountType+"')";
+            String addUser = "INSERT INTO PERSON (PID,NAME,ADDRESS) VALUES("+id+",'"+Name+"','"+Address+"')";
+            String addAccount = "INSERT INTO ACCOUNT (PID,USERNAME,EMAIL,PASSWORD,ACCOUNT_TYPE) VALUES("+id+",'"+Username+"','"+Email+"','"+Password+"','"+AccountType+"')";
             stcat.executeUpdate(addUser);
             stcat.executeUpdate(addAccount);
-            if(AccountType == "Customer"){
-                String addCust = "INSERT INTO CUSTOMER (PID) VALUES('"+id+"')";
+            if(AccountType.equals("Customer")){
+                String addCust = "INSERT INTO CUSTOMER (PID) VALUES("+id+")";
                 stcat.executeUpdate(addCust);
             }else{
-                String addTech = "INSERT INTO TECHNICIAN (PID,OrdersMaxCapacity,Salary) VALUES('"+id+"','"+ordersMaxCapacity+"','"+Salary+"')";
+                String addTech = "INSERT INTO TECHNICIAN (PID,OrdersMaxCapacity,Salary) VALUES("+id+",'"+ordersMaxCapacity+"','"+Salary+"')";
                 stcat.executeUpdate(addTech);
         }
             stcat.close();
@@ -114,5 +114,6 @@ public class Admin extends Person{
         } catch (SQLException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 }
