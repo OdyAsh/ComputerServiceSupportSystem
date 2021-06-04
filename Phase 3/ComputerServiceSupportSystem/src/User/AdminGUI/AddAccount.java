@@ -23,8 +23,9 @@ public class AddAccount extends javax.swing.JFrame {
     public AddAccount(Admin ad) {
         currentUser = new AdminController(ad);
         initComponents();
-        MaxOrderCapacity.setEnabled(false);
-        Salary.setEnabled(false);
+        maxCap.setEnabled(false);
+        salary.setEnabled(false);
+        type = Accounttype.getSelectedItem().toString();
     }
 
     /**
@@ -70,6 +71,12 @@ public class AddAccount extends javax.swing.JFrame {
         Salary.setText("Salary");
 
         AccountType.setText("Account Type");
+
+        maxCap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxCapActionPerformed(evt);
+            }
+        });
 
         Accounttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Technician", "Customer" }));
         Accounttype.addActionListener(new java.awt.event.ActionListener() {
@@ -186,7 +193,7 @@ public class AddAccount extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AccounttypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AccounttypeActionPerformed
-        type = (String)Accounttype.getSelectedItem( );
+        
     }//GEN-LAST:event_AccounttypeActionPerformed
 
     private void CreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountActionPerformed
@@ -196,33 +203,36 @@ public class AddAccount extends javax.swing.JFrame {
         String UserFinalPass = String.copyValueOf(UserPass);
         String UserNickName = Username.getText();
         String UserAddress = Address.getText();
-        int OrderMaxCapacity = Integer.parseInt(MaxOrderCapacity.getText());
-        int UserSalary = Integer.parseInt(Salary.getText());
-        
-        if(Name.equals("") || Username.equals("") || Address.equals("") || password.equals("") || Accounttype.equals("")){
-            JOptionPane.showMessageDialog(this, "Please fill all fields");
-        }else{
-            if(type == "Technician"){
-                MaxOrderCapacity.setEnabled(true);
-                Salary.setEnabled(true);
-                if(MaxOrderCapacity.equals("") || Salary.equals("")){
-                    JOptionPane.showMessageDialog(this, "Please Specify Max order capacity and Salary"); 
+        try {
+            int OrderMaxCapacity = Integer.parseInt(maxCap.getText());
+            int UserSalary = Integer.parseInt(salary.getText());
+            if(Name.getText().equals("") || Username.getText().equals("") || Address.getText().equals("") || password.getText().equals("")){
+                JOptionPane.showMessageDialog(this, "Please fill all fields");
+            }else{
+                if(type.equals("Technician")){
+                    maxCap.setEnabled(true);
+                    salary.setEnabled(true);
+                    if(maxCap.getText().equals("") || salary.getText().equals("")){
+                        JOptionPane.showMessageDialog(this, "Please Specify Max order capacity and Salary"); 
+                    }else{
+                        boolean testQur = currentUser.addAccount(UserName, UserNickName, UserEmail, UserFinalPass, UserAddress, type, OrderMaxCapacity, UserSalary);
+                        if(testQur){
+                            JOptionPane.showMessageDialog(this, "Technician got added Successfully"); 
+                        }else{
+                            JOptionPane.showMessageDialog(this, "Technician didn't get addded, check inputs"); 
+                        }
+                    }
                 }else{
                     boolean testQur = currentUser.addAccount(UserName, UserNickName, UserEmail, UserFinalPass, UserAddress, type, OrderMaxCapacity, UserSalary);
-                    if(testQur){
-                        JOptionPane.showMessageDialog(this, "Technician got added Successfully"); 
-                    }else{
-                        JOptionPane.showMessageDialog(this, "Technician didn't get addded, check inputs"); 
-                    }
+                        if(testQur){
+                            JOptionPane.showMessageDialog(this, "Customer got added Succesffuly"); 
+                        }else{
+                            JOptionPane.showMessageDialog(this, "Customer didn't get addded, check inputs"); 
+                        }
                 }
-            }else{
-                boolean testQur = currentUser.addAccount(UserName, UserNickName, UserEmail, UserFinalPass, UserAddress, type, OrderMaxCapacity, UserSalary);
-                    if(testQur){
-                        JOptionPane.showMessageDialog(this, "Customer got added Succesffuly"); 
-                    }else{
-                        JOptionPane.showMessageDialog(this, "Customer didn't get addded, check inputs"); 
-                    }
             }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "INVALID");
         }
     }//GEN-LAST:event_CreateAccountActionPerformed
 
@@ -231,6 +241,10 @@ public class AddAccount extends javax.swing.JFrame {
         hd.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_LogoutActionPerformed
+
+    private void maxCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxCapActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maxCapActionPerformed
 
     /**
      * @param args the command line arguments

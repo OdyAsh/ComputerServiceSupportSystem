@@ -17,10 +17,12 @@ public class ValidatePayment {
     private int notValidOrBalance;
     public ValidatePayment() throws SQLException {
         this.c = new Customer();
+        this.b = new Bank();
     }
     
-    public ValidatePayment(Customer c) {
+    public ValidatePayment(Customer c) throws SQLException {
         this.c = c;
+        this.b = new Bank();
     }
     
     public int checkCredit(int customerId, String cardNumber, int partPrice) throws SQLException {

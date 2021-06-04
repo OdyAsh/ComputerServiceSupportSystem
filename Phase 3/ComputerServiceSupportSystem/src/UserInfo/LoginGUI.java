@@ -9,6 +9,7 @@ import User.Customer;
 import User.CustomerGUI.HomeCustomer;
 import User.Person;
 import User.Technician;
+import User.TechnicianGUI.HomeTechnician;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

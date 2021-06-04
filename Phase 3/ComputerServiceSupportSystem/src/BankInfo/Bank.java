@@ -4,11 +4,13 @@
 package BankInfo;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 /**
  *
@@ -42,9 +44,10 @@ public class Bank {
         if (rs.next()) {
             if (rs.getString("CARDNUMBER").equals(cardNumber)) {
                 if (rs.getInt("BALANCE") >= partPrice) {
-                    LocalDate expDate = rs.getObject("EXPIRATIONDATE", LocalDate.class);
+                    Date expSQLDate = rs.getDate("EXPIRATIONDATE");
+                    LocalDate expDate = expSQLDate.toLocalDate();
                     LocalDate currDate = LocalDate.now();
-                    if (expDate.compareTo(currDate) <= 0) {
+                    if (expDate.compareTo(currDate) >= 0) {
                         Credit cr = new Credit();
                         notValidOrBalance = cr.withdraw(customerId, partPrice);
                     } else {
@@ -60,7 +63,6 @@ public class Bank {
             notValidOrBalance = -1;
         }
         ps.close();
-        ;
         return notValidOrBalance;
     }
     

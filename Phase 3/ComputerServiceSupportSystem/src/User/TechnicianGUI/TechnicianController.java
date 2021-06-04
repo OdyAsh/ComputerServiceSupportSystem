@@ -18,6 +18,10 @@ public class TechnicianController {
     private Technician currentTechnician;
     private ArrayList<Order> queue = null;
     
+    public TechnicianController() throws SQLException {
+        currentTechnician = new Technician();  
+    }
+    
     public TechnicianController(Technician currentTech) {
         currentTechnician = currentTech;
         
@@ -35,7 +39,7 @@ public class TechnicianController {
         return queue;
     }
     
-    public void setQueue(Order q, int technicianId) throws SQLException {
+    public void setQueue(int technicianId) throws SQLException {
         
         queue = currentTechnician.viewOrderQueue(technicianId);
         
@@ -71,5 +75,8 @@ public class TechnicianController {
         
     }
      
+    public int getPid() {
+        return currentTechnician.getPid();
+    }
    
 }
