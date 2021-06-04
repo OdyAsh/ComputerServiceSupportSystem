@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +36,7 @@ public class Admin extends Person{
         try{
             Statement stmt = conncat.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT PID FROM PERSON ORDER BY PID DESC");
-            rs.next();
+            rs.first();
             int id = rs.getInt("PID");
             id += 1;
             String addUser = "INSERT INTO PERSON (PID,NAME,ADDRESS) VALUES("+id+",'"+Name+"','"+Address+"')";
@@ -48,7 +47,7 @@ public class Admin extends Person{
                 String addCust = "INSERT INTO CUSTOMER (PID) VALUES("+id+")";
                 stcat.executeUpdate(addCust);
             }else{
-                String addTech = "INSERT INTO TECHNICIAN (PID,OrdersMaxCapacity,Salary) VALUES("+id+",'"+ordersMaxCapacity+"','"+Salary+"')";
+                String addTech = "INSERT INTO TECHNICIAN (PID,MAXCAPACITY,SALARY) VALUES("+id+",'"+ordersMaxCapacity+"','"+Salary+"')";
                 stcat.executeUpdate(addTech);
         }
             stcat.close();
@@ -58,9 +57,9 @@ public class Admin extends Person{
             return false;
         }
     }
-    public boolean removeAccount(String userType,int id){
+    public boolean removeAccount(int id){
         try{
-            String sqlPerson = "DELETE FROM PERSON WHERE PID in (SELECT ACCOUNT_TYPE,PID FROM ACCOUNT WHERE ACCOUNT_TYPE ="+userType+" & PID="+id+"));";
+            String sqlPerson = "DELETE FROM PERSON WHERE PID="+id;
             int numOfRows = stcat.executeUpdate(sqlPerson);
             stcat.close();
             conncat.close();
@@ -71,9 +70,9 @@ public class Admin extends Person{
     }
     public boolean searchAccounts(int id){
         try{
-            String sqlIdentify = "SELECT PID,ACCOUNT_TYPE FROM ACCOUNT WHERE PID ="+id+"& ACCOUNT_TYPE = 'Technician'";
+            String sqlIdentify = "SELECT PID,ACCOUNT_TYPE FROM ACCOUNT WHERE PID ="+id;
             ResultSet pid = stcat.executeQuery(sqlIdentify);
-            pid.next();
+            pid.first();
             int personId = pid.getInt("PID");
             stcat.close();
             conncat.close();
@@ -107,9 +106,11 @@ public class Admin extends Person{
                 temp.setOrderId(rs.getInt("ORDERID"));
                 temp.setPrice(rs.getInt("PRICE"));
                 temp.setStatus(rs.getString("STATUS"));
-                temp.setCreationDate(rs.getObject("CREATIONDATE", LocalDateTime.class));
+                temp.setCreationDate(rs.getObject("CREATIONDATE", LocalDate.class));
                 tempOrders.add(temp);
             }
+            stcat.close();
+            conncat.close();
             return tempOrders;
         } catch (SQLException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);

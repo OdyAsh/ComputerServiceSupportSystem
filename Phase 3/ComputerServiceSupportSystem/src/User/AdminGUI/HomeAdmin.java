@@ -4,8 +4,10 @@
 package User.AdminGUI;
 
 import User.Admin;
-import User.AdminGUI.AdminController;
 import UserInfo.LoginGUI;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -150,9 +152,13 @@ public class HomeAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_ModifyAccountActionPerformed
 
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
-        LoginGUI logout = new LoginGUI();
-        logout.setVisible(true);
-        this.dispose();
+        try {
+            LoginGUI logout = new LoginGUI();
+            logout.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(HomeAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void AddAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddAccountActionPerformed

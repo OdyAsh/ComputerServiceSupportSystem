@@ -124,7 +124,7 @@ public class ModifyAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Submit The account id of Technician you want to modify his salary");
         }else{
             int id = Integer.parseInt(AccountID.getText());
-            boolean test = currentUser.getCurrentAdmin().searchAccounts(id);
+            boolean test = currentUser.searchAccounts(id);
             if(test){
                 AccountID.setEnabled(false);
                 UpdateSalary.setEnabled(true);
@@ -141,8 +141,8 @@ public class ModifyAccount extends javax.swing.JFrame {
         }else{
             int salary = Integer.parseInt(NewSalary.getText());
             int id = Integer.parseInt(AccountID.getText());
-            currentUser.getCurrentAdmin().UpdateSalary(id, salary);
-            JOptionPane.showMessageDialog(this, "Records updated succesffuly!");
+            currentUser.UpdateSalary(id, salary);
+            JOptionPane.showMessageDialog(this, "Salary updated succesffuly!");
         }
     }//GEN-LAST:event_UpdateSalaryActionPerformed
 

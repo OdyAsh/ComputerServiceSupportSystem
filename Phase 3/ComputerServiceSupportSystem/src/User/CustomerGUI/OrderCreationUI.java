@@ -33,7 +33,7 @@ public class OrderCreationUI extends javax.swing.JFrame {
         vo = new ValidateOrder();
     }
     
-    public OrderCreationUI(Customer c) {
+    public OrderCreationUI(Customer c) throws SQLException {
         vo = new ValidateOrder(c);
         vp = new ValidatePayment(c);
         initComponents();
@@ -324,7 +324,7 @@ public class OrderCreationUI extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, orderConfirmation, "Order Created!", JOptionPane.INFORMATION_MESSAGE);
                 }   
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "There was a problem accessing the Bank's database, try later...", "Empty Field", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "There was a problem accessing the Bank's database, try later...", "Database problem", JOptionPane.ERROR_MESSAGE);
             }
         } else if (paymentType.equals("Cash")) {
             try { 
@@ -332,7 +332,7 @@ public class OrderCreationUI extends javax.swing.JFrame {
                 orderConfirmation += "\nNote, since you're paying with cash, please visit the nearest branch \nto pay and give us the part that you want to repair.";
                 JOptionPane.showMessageDialog(this, orderConfirmation, "Order Created!", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "There was a problem accessing the Bank's database, try later...", "Empty Field", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "There was a problem accessing the Bank's database, try later...", "Database problem", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_submitButtonActionPerformed
@@ -352,9 +352,14 @@ public class OrderCreationUI extends javax.swing.JFrame {
     }//GEN-LAST:event_partNameFieldMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        HomeCustomer hc = new HomeCustomer(vo.getCustomer());
-        hc.setVisible(true);
-        this.dispose();
+        HomeCustomer hc;
+        try {
+            hc = new HomeCustomer(vo.getCustomer());
+            hc.setVisible(true);
+            this.dispose(); 
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error opening the database...", "Database Problem", JOptionPane.ERROR_MESSAGE);;
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

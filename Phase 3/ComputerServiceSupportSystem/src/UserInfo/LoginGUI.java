@@ -186,7 +186,7 @@ public class LoginGUI extends javax.swing.JFrame {
         String uPass = String.copyValueOf(uPassChars);
         return uPass;
     }
-    public void loginConfirmationMessage(Person p) {
+    public void loginConfirmationMessage(Person p) throws SQLException {
         if (p != null) {
                 JOptionPane.showMessageDialog(this, "login Successful!\nTaking you to home page...");
                 if (adminRadioButton.isSelected()) {
@@ -221,10 +221,14 @@ public class LoginGUI extends javax.swing.JFrame {
             try {
                 vl.login(uUserNameEmail, uPass, userType);
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Database Problem", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error opening the database...", "Database Problem", JOptionPane.ERROR_MESSAGE);
             }
             Person p = vl.getPerson();
-            loginConfirmationMessage(p);
+            try {
+                loginConfirmationMessage(p);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error opening the database...", "Database Problem", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_loginButtonActionPerformed
 
@@ -281,7 +285,11 @@ public class LoginGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginGUI().setVisible(true);
+                try {
+                    new LoginGUI().setVisible(true);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Error opening the database...", "Database Problem", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }

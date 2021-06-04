@@ -52,4 +52,19 @@ public class AdminController {
     public String getPassword(){
         return currentAdmin.getAccount().getPassword();
     }
+    public boolean addAccount(String Name, String Username,String Email, String Password,String Address,String AccountType,int ordersMaxCapacity,int Salary){
+        boolean test = currentAdmin.addAccount(Name, Username, Email, Password, Address, AccountType, ordersMaxCapacity, Salary);
+        return test;
+    }
+    public boolean removeAccount(int id){
+        boolean test = currentAdmin.removeAccount(id);
+        return test;
+    }
+    public boolean searchAccounts(int id){
+        boolean test = currentAdmin.searchAccounts(id);
+        return test;
+    }
+    public void UpdateSalary(int id, int Salary){
+        currentAdmin.UpdateSalary(id, Salary);
+    }
 }

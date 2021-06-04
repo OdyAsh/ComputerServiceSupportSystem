@@ -108,7 +108,7 @@ public class DeleteAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Submit account id of account you want to delete");
         }else{
             int id = Integer.parseInt(ID.getText());
-            boolean test = currentUser.getCurrentAdmin().searchAccounts(id);
+            boolean test = currentUser.searchAccounts(id);
             if(test){
                 ID.setEnabled(false);
                 Delete.setEnabled(true);
@@ -125,7 +125,11 @@ public class DeleteAccount extends javax.swing.JFrame {
     }//GEN-LAST:event_CancelActionPerformed
 
     private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
-        // TODO add your handling code here:
+        int id = Integer.parseInt(ID.getText());
+        boolean test = currentUser.removeAccount(id);
+        if(test){
+            JOptionPane.showMessageDialog(this, "Account with ID "+id+" Got deleted succesffuly");
+        }      
     }//GEN-LAST:event_DeleteActionPerformed
 
     /**

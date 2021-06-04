@@ -6,22 +6,34 @@ package User.CustomerGUI;
 import ExceptionHandling.MyException;
 import User.Customer;
 import UserInfo.Order;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 /**
  *
  * @author Ash
  */
 public class ValidateOrder {
+    Connection conncat = null;
+    java.sql.Statement stcat = null;
+    ResultSet rs = null;
+    String query;
     private Customer c;
     private Order o;
+    
     public ValidateOrder() throws SQLException {
         this.c = new Customer();
     }
     
-    public ValidateOrder(Customer c) {
+    public ValidateOrder(Customer c) throws SQLException {
         this.c = c;
+        conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem","csss","csss");
     }
+    
     public int checkPartAvailability(String part) throws MyException, SQLException {
         if (part.equals(""))
             throw new MyException("Can't leave this field empty!");

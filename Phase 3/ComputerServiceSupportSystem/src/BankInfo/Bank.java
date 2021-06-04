@@ -22,6 +22,8 @@ public class Bank {
     
     public Bank() throws SQLException {
         conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
+        this.bankName = "";
+        creditCard = new ArrayList<>();
     }
     
     public Bank(String bankName) throws SQLException {      
@@ -36,7 +38,7 @@ public class Bank {
         int notValidOrBalance;
         ps = conn.prepareStatement(sql);
         ps.setInt(1, customerId);
-        ResultSet rs = ps.executeQuery(sql);
+        ResultSet rs = ps.executeQuery();
         if (rs.next()) {
             if (rs.getInt("CARDNUMBER") == cardNumber) {
                 if (rs.getInt("BALANCE") >= partPrice) {
@@ -57,6 +59,8 @@ public class Bank {
         } else {
             notValidOrBalance = -1;
         }
+        ps.close();
+        conn.close();
         return notValidOrBalance;
     }
     

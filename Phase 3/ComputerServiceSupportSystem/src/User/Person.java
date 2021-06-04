@@ -22,6 +22,9 @@ PreparedStatement ps = null;
    
    public Person() throws SQLException {
         conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
+        Pid = 0;
+        Name = Address = "";
+        account = null;
     }
    public Person(int Pid,String Name,Account account,String Address) {
        this.Pid = Pid;

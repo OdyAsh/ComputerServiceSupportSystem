@@ -15,7 +15,7 @@ public class ValidatePayment {
     private Customer c;
     private Bank b;
     private int notValidOrBalance;
-    public ValidatePayment() {
+    public ValidatePayment() throws SQLException {
         this.c = new Customer();
     }
     

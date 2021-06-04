@@ -208,8 +208,7 @@ public class AddAccount extends javax.swing.JFrame {
                 if(MaxOrderCapacity.equals("") || Salary.equals("")){
                     JOptionPane.showMessageDialog(this, "Please Specify Max order capacity and Salary"); 
                 }else{
-                    // String Name, String Username,String Email, String Password,String Address,String AccountType,int ordersMaxCapacity,int Salary
-                    boolean testQur = currentUser.getCurrentAdmin().addAccount(UserName, UserNickName, UserEmail, UserFinalPass, UserAddress, type, OrderMaxCapacity, UserSalary);
+                    boolean testQur = currentUser.addAccount(UserName, UserNickName, UserEmail, UserFinalPass, UserAddress, type, OrderMaxCapacity, UserSalary);
                     if(testQur){
                         JOptionPane.showMessageDialog(this, "Technician got added Successfully"); 
                     }else{
@@ -217,7 +216,7 @@ public class AddAccount extends javax.swing.JFrame {
                     }
                 }
             }else{
-                boolean testQur = currentUser.getCurrentAdmin().addAccount(UserName, UserNickName, UserEmail, UserFinalPass, UserAddress, type, OrderMaxCapacity, UserSalary);
+                boolean testQur = currentUser.addAccount(UserName, UserNickName, UserEmail, UserFinalPass, UserAddress, type, OrderMaxCapacity, UserSalary);
                     if(testQur){
                         JOptionPane.showMessageDialog(this, "Customer got added Succesffuly"); 
                     }else{

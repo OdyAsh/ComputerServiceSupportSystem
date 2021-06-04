@@ -4,7 +4,6 @@
 package User.AdminGUI;
 
 import User.Admin;
-import User.AdminGUI.AdminController;
 import UserInfo.Order;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -124,10 +123,10 @@ public class GenerateReport extends javax.swing.JFrame {
     }//GEN-LAST:event_CancelActionPerformed
 
     private void GenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateActionPerformed
-        if(date == ""){
-            JOptionPane.showMessageDialog(this, "You should specify a date"); 
+        if(localDate.equals("") || value.equals("")){
+            JOptionPane.showMessageDialog(this, "You should specify a date and Status"); 
         }else{
-            currentUser.setTempOrders(localDate, date);
+            currentUser.setTempOrders(localDate, value);
             if(currentUser.getTempOrders() == null){
                 JOptionPane.showMessageDialog(this, "There are no orders in this date");
             }else{

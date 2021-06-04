@@ -19,12 +19,14 @@ public class HomeCustomer extends javax.swing.JFrame {
      */
     ValidateOrder vo;
     ValidatePayment vp;
-    public HomeCustomer() {
+    public HomeCustomer() throws SQLException {
         initComponents();
+        vo = new ValidateOrder();
+        vp = new ValidatePayment();
         userNameLabel.setText("Username here");
     }
     
-    public HomeCustomer(Customer c) {
+    public HomeCustomer(Customer c) throws SQLException {
         vo = new ValidateOrder(c);
         vp = new ValidatePayment(c);
         initComponents();
@@ -97,15 +99,19 @@ public class HomeCustomer extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(userNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(39, 39, 39)
+                .addComponent(addOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(manageOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(logOut, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logOut, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(manageOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,10 +125,10 @@ public class HomeCustomer extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(50, 50, 50)
-                        .addComponent(addOrder)
-                        .addGap(18, 18, 18)
-                        .addComponent(manageOrders)
-                        .addContainerGap(26, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addOrder)
+                            .addComponent(manageOrders))
+                        .addContainerGap(167, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(logOut)
@@ -133,15 +139,26 @@ public class HomeCustomer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addOrderActionPerformed
-        OrderCreationUI oc = new OrderCreationUI(vo.getCustomer());
-        oc.setVisible(true);
-        this.dispose();
+        OrderCreationUI oc;
+        try {
+            oc = new OrderCreationUI(vo.getCustomer());
+            oc.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error opening the database...", "Database Problem", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_addOrderActionPerformed
 
     private void manageOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageOrdersActionPerformed
-        OrdersDetailsUI od = new OrderDetailsUI(vo.getCustomer());
-        od.setVisible(true);
-        this.dispose();
+        OrdersDetailsUI od;
+        try {
+            od = new OrdersDetailsUI(vo.getCustomer());
+            od.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error opening the database...", "Database Problem", JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_manageOrdersActionPerformed
 
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
@@ -185,7 +202,11 @@ public class HomeCustomer extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new HomeCustomer().setVisible(true);
+                try {
+                    new HomeCustomer().setVisible(true);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Error opening the database...", "Database Problem", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
