@@ -74,9 +74,9 @@ public class Admin extends Person{
     public boolean removeAccount(int id){
         try{
             String sqlPerson = "DELETE FROM PERSON WHERE PID="+id;
+            stcat = conncat.createStatement();
             int numOfRows = stcat.executeUpdate(sqlPerson);
             stcat.close();
-            
             return numOfRows != 0;
         }catch(SQLException ex){
             return false;

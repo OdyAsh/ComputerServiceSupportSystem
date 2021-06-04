@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
  */
 public class DeleteAccount extends javax.swing.JFrame {
     AdminController currentUser;
+    int id;
     /**
      * Creates new form DeleteAccount
      */
@@ -104,17 +105,17 @@ public class DeleteAccount extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchActionPerformed
-        if(ID.equals("")){
-            JOptionPane.showMessageDialog(this, "Submit account id of account you want to delete");
-        }else{
-            int id = Integer.parseInt(ID.getText());
-            boolean test = currentUser.searchAccounts(id);
+        try{
+             id = Integer.parseInt(ID.getText());
+              boolean test = currentUser.searchAccounts(id);
             if(test){
                 ID.setEnabled(false);
                 Delete.setEnabled(true);
             }else{
-                JOptionPane.showMessageDialog(this, "There is account registered with this account id");
+                JOptionPane.showMessageDialog(this, "There is no account registered with this account id");
             }
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(this, "Submit ID of account to delete it");
         }
     }//GEN-LAST:event_SearchActionPerformed
 
@@ -125,11 +126,18 @@ public class DeleteAccount extends javax.swing.JFrame {
     }//GEN-LAST:event_CancelActionPerformed
 
     private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
-        int id = Integer.parseInt(ID.getText());
-        boolean test = currentUser.removeAccount(id);
-        if(test){
-            JOptionPane.showMessageDialog(this, "Account with ID "+id+" Got deleted succesffuly");
-        }      
+        try {
+            id = Integer.parseInt(ID.getText());
+            boolean test = currentUser.removeAccount(id);
+            if(test){
+                JOptionPane.showMessageDialog(this, "Account with ID "+id+" Got deleted succesffuly");
+            } else {
+                JOptionPane.showMessageDialog(this, "No Account found with such an id");
+            }
+                
+        } catch(NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "INVALID");
+        }
     }//GEN-LAST:event_DeleteActionPerformed
 
     /**

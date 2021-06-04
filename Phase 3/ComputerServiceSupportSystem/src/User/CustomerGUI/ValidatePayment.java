@@ -23,7 +23,7 @@ public class ValidatePayment {
         this.c = c;
     }
     
-    public int checkCredit(int customerId, int cardNumber, int partPrice) throws SQLException {
+    public int checkCredit(int customerId, String cardNumber, int partPrice) throws SQLException {
         notValidOrBalance = b.checkCredit(customerId, cardNumber, partPrice);
         return notValidOrBalance;
     }

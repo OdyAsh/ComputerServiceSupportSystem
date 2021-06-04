@@ -23,7 +23,7 @@ public class OrderCreationUI extends javax.swing.JFrame {
     ValidatePayment vp;
     private String part;
     private int price;
-    private int cardNumber;
+    private String cardNumber;
     private String paymentType;
     private int notValidOrBalance;
     
