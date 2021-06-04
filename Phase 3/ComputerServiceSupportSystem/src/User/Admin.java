@@ -3,6 +3,7 @@
  */
 package User;
 
+import UserInfo.Account;
 import UserInfo.Order;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
 public class Admin extends Person{
     Connection conncat = null;
     java.sql.Statement stcat = null;
-    public Admin(){
+    public Admin() throws SQLException {
        try{
            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
            stcat = conncat.createStatement();
@@ -31,6 +32,17 @@ public class Admin extends Person{
        }
     }
     
+     public Admin(Person p) throws SQLException {
+        super(p.getPid(), p.getName(), p.getAccount(), p.getAddress());
+        conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
+        stcat = conncat.createStatement();
+    }
+    
+    public Admin(int Pid, String Name, Account account, String Address) throws SQLException {
+        super(Pid, Name, account, Address);
+        conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
+        stcat = conncat.createStatement();
+    }
     
     public boolean addAccount(String Name, String Username,String Email, String Password,String Address,String AccountType,int ordersMaxCapacity,int Salary){
         try{
@@ -51,7 +63,7 @@ public class Admin extends Person{
                 stcat.executeUpdate(addTech);
         }
             stcat.close();
-            conncat.close();
+            
             return true;
         }catch(SQLException ex){
             return false;
@@ -62,7 +74,7 @@ public class Admin extends Person{
             String sqlPerson = "DELETE FROM PERSON WHERE PID="+id;
             int numOfRows = stcat.executeUpdate(sqlPerson);
             stcat.close();
-            conncat.close();
+            
             return numOfRows != 0;
         }catch(SQLException ex){
             return false;
@@ -75,7 +87,7 @@ public class Admin extends Person{
             pid.first();
             int personId = pid.getInt("PID");
             stcat.close();
-            conncat.close();
+            
             return personId == id;
         }catch(SQLException ex){
             return false;
@@ -86,7 +98,7 @@ public class Admin extends Person{
             String sqlSalaryUpdate = "UPDATE TECHNICIAN SET SALARY = "+Salary+" WHERE PID="+id;
             stcat.executeUpdate(sqlSalaryUpdate);
             stcat.close();
-            conncat.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -110,7 +122,7 @@ public class Admin extends Person{
                 tempOrders.add(temp);
             }
             stcat.close();
-            conncat.close();
+            
             return tempOrders;
         } catch (SQLException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);

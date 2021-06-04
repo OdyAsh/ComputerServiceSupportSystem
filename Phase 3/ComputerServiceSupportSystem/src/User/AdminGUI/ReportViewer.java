@@ -24,14 +24,14 @@ public class ReportViewer extends javax.swing.JFrame {
         initComponents();
     }
     public ReportViewer(LocalDate dateCom, String statusCom,ArrayList<Order> received){
+        initComponents();
         receivedFinal = received;
         date.setText(String.valueOf(dateCom));
         status.setText(statusCom);
         for(int i = 0; i < receivedFinal.size(); i++){
          model.addRow(new Object[]{receivedFinal.get(i).getOrderId(),receivedFinal.get(i).getPrice(),receivedFinal.get(i).getCreationDate(),receivedFinal.get(i).getStatus()});
         }
-        model.addRow(new Object[]{"TotalOrders: ",receivedFinal.size()});
-        initComponents();
+        model.addRow(new Object[]{"TotalOrders: ",receivedFinal.size()});    
     }
 
     /**

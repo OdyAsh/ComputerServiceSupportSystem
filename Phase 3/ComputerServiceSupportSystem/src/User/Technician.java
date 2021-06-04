@@ -2,6 +2,7 @@
  * Group 1: Computer Service Support System (24)
  */
 package User;
+import UserInfo.Account;
 import UserInfo.Order;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,11 +25,11 @@ public class Technician extends Person {
     String query;
     Connection conncat = null;
 
-    public Technician() {
+    public Technician() throws SQLException {
         ordersMaxCapacity = 0;
         salary = 0;
          try {
-            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem");
+            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
             stcat = conncat.createStatement();
             System.out.println("Database connected successfully");
         } 
@@ -36,9 +37,26 @@ public class Technician extends Person {
             System.out.println("Database connection failed");
         }
     }
-    public Technician(int capacity, int salary) {
+     public Technician(Person p) throws SQLException {
+        super(p.getPid(), p.getName(), p.getAccount(), p.getAddress());
+        conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
+        stcat = conncat.createStatement();
+    }
+    public Technician(int Pid, String Name, Account account, String Address) throws SQLException {
+        super(Pid, Name, account, Address);
+        conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
+        stcat = conncat.createStatement();
+    }
+    public Technician(int Pid, String Name, Account account, String Address, int capacity, int salary) throws SQLException {
+        super(Pid, Name, account, Address);
+        this.salary = salary;
+        ordersMaxCapacity = capacity;
+        conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
+        stcat = conncat.createStatement();
+    }
+    public Technician(int capacity, int salary) throws SQLException {
          try {
-            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem");
+            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
             stcat = conncat.createStatement();
             System.out.println("Database connected successfully");
         } 
@@ -86,7 +104,6 @@ public class Technician extends Person {
        prepStmt.setInt(2, orderId);
        int isUpdated = prepStmt.executeUpdate();
        prepStmt.close();
-       conncat.close();
        return isUpdated != 0;
     }
 
@@ -106,7 +123,6 @@ public class Technician extends Person {
             queue.add(temp);
          }
          prepStmt.close();
-         conncat.close();
          return queue;
     }
 

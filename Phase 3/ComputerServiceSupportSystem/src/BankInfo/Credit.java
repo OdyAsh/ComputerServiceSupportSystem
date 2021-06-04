@@ -44,22 +44,24 @@ public class Credit {
         ps = conn.prepareStatement(sql);
         ps.setInt(1, customerId);
         ResultSet rs = ps.executeQuery();
-        rs.first();
-        int currentBalance = rs.getInt("BALANCE");
-        if (currentBalance <= partPrice) {
+        if (rs.next()) {
+            int currentBalance = rs.getInt("BALANCE");
+            if (currentBalance <= partPrice) {
+                ps.close();
+                return -2;
+            }
+            int updatedBalance =  currentBalance - partPrice;
+            sql = "UPDATE CREDIT SET BALANCE=? WHERE CUSTOMERID=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, updatedBalance);
+            ps.setInt(2, customerId);
+            ps.executeUpdate();
             ps.close();
-            conn.close();
-            return -4;
+            return updatedBalance;
+        } else {
+            return -1;
         }
-        int updatedBalance =  currentBalance - partPrice;
-        sql = "UPDATE CREDIT SET BALANCE=? WHERE CUSTOMERID=?";
-        ps = conn.prepareStatement(sql);
-        ps.setInt(1, updatedBalance);
-        ps.setInt(2, customerId);
-        ps.executeUpdate();
-        ps.close();
-        conn.close();
-        return updatedBalance;
+        
     }
     
     public int refund(int customerId, int partPrice) throws SQLException {
@@ -68,17 +70,19 @@ public class Credit {
         ps = conn.prepareStatement(sql);
         ps.setInt(1, customerId);
         ResultSet rs = ps.executeQuery();
-        rs.first();
-        int currentBalance = rs.getInt("BALANCE");
-        int updatedBalance = currentBalance + partPrice;
-        sql = "UPDATE CREDIT SET BALANCE=? WHERE CUSTOMERID=?";
-        ps = conn.prepareStatement(sql);
-        ps.setInt(1, updatedBalance);
-        ps.setInt(2, customerId);
-        ps.executeUpdate();
-        ps.close();
-        conn.close();
-        return updatedBalance;
+        if (rs.next()) {
+            int currentBalance = rs.getInt("BALANCE");
+            int updatedBalance = currentBalance + partPrice;
+            sql = "UPDATE CREDIT SET BALANCE=? WHERE CUSTOMERID=?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, updatedBalance);
+            ps.setInt(2, customerId);
+            ps.executeUpdate();
+            ps.close();
+            return updatedBalance;
+        } else {
+            return -1;
+        }
     }
 
     public int getBalance() {

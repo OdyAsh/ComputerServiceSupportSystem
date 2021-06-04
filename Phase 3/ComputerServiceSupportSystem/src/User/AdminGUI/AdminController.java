@@ -5,6 +5,7 @@ package User.AdminGUI;
 
 import User.Admin;
 import UserInfo.Order;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -15,6 +16,9 @@ import java.util.ArrayList;
 public class AdminController {
     private Admin currentAdmin;
     private ArrayList<Order> tempOrd = null;
+    public AdminController() throws SQLException {
+        this.currentAdmin = new Admin();
+    }
     public AdminController(Admin currentAdmin) {
         this.currentAdmin = currentAdmin;
     }

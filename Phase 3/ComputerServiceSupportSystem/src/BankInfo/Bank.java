@@ -60,7 +60,7 @@ public class Bank {
             notValidOrBalance = -1;
         }
         ps.close();
-        conn.close();
+        ;
         return notValidOrBalance;
     }
     

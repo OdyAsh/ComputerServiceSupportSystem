@@ -32,6 +32,11 @@ public class Customer extends Person {
         conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
     }
     
+    public Customer(Person p) throws SQLException {
+        super(p.getPid(), p.getName(), p.getAccount(), p.getAddress());
+        conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
+    }
+    
     public int searchParts(String part) throws SQLException {
         String sql = "SELECT PRICE FROM PART WHERE PNAME=?";
         ps = conn.prepareStatement(sql);
@@ -40,11 +45,9 @@ public class Customer extends Person {
         if (rs.next()) {
             int partPrice = rs.getInt("PRICE");
             ps.close();
-            conn.close();
             return partPrice;
         } else {
             ps.close();
-            conn.close();
             return -1;
         }
     }
@@ -67,16 +70,13 @@ public class Customer extends Person {
                 o.setPrice(rs.getInt("PRICE"));
                 o.setCreationDate(rs.getObject("CREATIONDATE", LocalDate.class));
                 ps.close();
-                conn.close();
                 return o;
             } else {
                 ps.close();
-                conn.close();
                 throw new MyException("No order was found with that id...");
             }
         } else {
             ps.close();
-            conn.close();
             return null;
         }
     }
@@ -100,7 +100,7 @@ public class Customer extends Person {
                     ps.executeUpdate();
                     st.close();
                     ps.close();
-                    conn.close();
+                    ;
                     return;
                 } else {
                     errorType = "Can't cancel, as the order has been assigned to a technician...";
@@ -113,7 +113,6 @@ public class Customer extends Person {
         }
         st.close();
         ps.close();
-        conn.close();
         throw new MyException(errorType);
     }
     
@@ -128,7 +127,6 @@ public class Customer extends Person {
         ps.setInt(5, customerId);
         ps.executeUpdate();
         ps.close();
-        conn.close();
         return o.getOrderId();
     }
 }

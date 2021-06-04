@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * @author infolos
  */
 public class HomeAdmin extends javax.swing.JFrame {
-    AdminController currentUser= null;
+    AdminController currentUser;
     /**
      * Creates new form HomeAdmin
      */
@@ -22,9 +22,9 @@ public class HomeAdmin extends javax.swing.JFrame {
         initComponents();
     }
     public HomeAdmin(Admin ad) {
-        currentUser.setCurrentAdmin(ad);
-        Name.setText(currentUser.getName());
+        currentUser = new AdminController(ad);
         initComponents();
+        Name.setText(currentUser.getName());
     }
 
     /**

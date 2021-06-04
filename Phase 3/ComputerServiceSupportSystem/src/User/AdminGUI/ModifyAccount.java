@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * @author infolos
  */
 public class ModifyAccount extends javax.swing.JFrame {
-    AdminController currentUser= null;
+    AdminController currentUser;
     /**
      * Creates new form ModifyAccount
      */
@@ -20,11 +20,12 @@ public class ModifyAccount extends javax.swing.JFrame {
         initComponents();
     }
     public ModifyAccount(Admin ad){
+        currentUser = new AdminController(ad);
+        initComponents();
         currentUser.setCurrentAdmin(ad);
         UpdateSalary.setEnabled(false);
         NewSalary.setEnabled(false);
         jLabel2.setVisible(true);
-        initComponents();
     }
 
     /**

@@ -15,8 +15,6 @@ private int Pid;
 private String Name; 
 private Account account;
 private String Address;
-
-
 Connection conn =null;
 PreparedStatement ps = null;
    
@@ -26,7 +24,8 @@ PreparedStatement ps = null;
         Name = Address = "";
         account = null;
     }
-   public Person(int Pid,String Name,Account account,String Address) {
+   public Person(int Pid,String Name,Account account,String Address) throws SQLException {
+       conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
        this.Pid = Pid;
        this.Name = Name;
        this.account = account;

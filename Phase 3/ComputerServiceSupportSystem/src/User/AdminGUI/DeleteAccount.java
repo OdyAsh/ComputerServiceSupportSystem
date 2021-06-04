@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * @author infolos
  */
 public class DeleteAccount extends javax.swing.JFrame {
-    AdminController currentUser= null;
+    AdminController currentUser;
     /**
      * Creates new form DeleteAccount
      */
@@ -20,9 +20,9 @@ public class DeleteAccount extends javax.swing.JFrame {
         initComponents();
     }
     public DeleteAccount(Admin ad){
-        currentUser.setCurrentAdmin(ad);
-        Delete.setEnabled(false);
+        currentUser = new AdminController(ad);
         initComponents();
+        Delete.setEnabled(false);
     }
     /**
      * This method is called from within the constructor to initialize the form.

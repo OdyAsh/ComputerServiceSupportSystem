@@ -21,7 +21,7 @@ public class GenerateReport extends javax.swing.JFrame {
     LocalDate localDate;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String date;
-    ArrayList<Order> testTemp = null;
+    ArrayList<Order> testTemp;
     String value;
     /**
      * Creates new form GenerateReport
@@ -30,10 +30,7 @@ public class GenerateReport extends javax.swing.JFrame {
         initComponents();
     }
     public GenerateReport(Admin ad){
-        date = sdf.format(Date_chooser.getDate());
-        localDate = LocalDate.parse(date, formatter);
-        currentUser.setCurrentAdmin(ad);
-        value = Status.getSelectedItem().toString();
+        currentUser = new AdminController(ad);
         initComponents();
     }
 
@@ -59,7 +56,7 @@ public class GenerateReport extends javax.swing.JFrame {
 
         jLabel2.setText("Status");
 
-        Status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fixed", "Not Fixed", "In Repair", "Cancelled" }));
+        Status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fixed", "NotFixed", "InRepair", "Cancelled" }));
 
         Generate.setText("Generate");
         Generate.addActionListener(new java.awt.event.ActionListener() {
@@ -123,6 +120,9 @@ public class GenerateReport extends javax.swing.JFrame {
     }//GEN-LAST:event_CancelActionPerformed
 
     private void GenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateActionPerformed
+        date = sdf.format(Date_chooser.getDate());
+        localDate = LocalDate.parse(date, formatter);
+        value = Status.getSelectedItem().toString();
         if(localDate.equals("") || value.equals("")){
             JOptionPane.showMessageDialog(this, "You should specify a date and Status"); 
         }else{
