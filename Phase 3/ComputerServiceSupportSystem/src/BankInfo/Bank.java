@@ -33,14 +33,14 @@ public class Bank {
         
     }
     
-    public int checkCredit(int customerId, int cardNumber, int partPrice) throws SQLException {   
+    public int checkCredit(int customerId, String cardNumber, int partPrice) throws SQLException {   
         String sql = "SELECT * FROM CREDIT WHERE CUSTOMERID=?";
         int notValidOrBalance;
         ps = conn.prepareStatement(sql);
         ps.setInt(1, customerId);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            if (rs.getInt("CARDNUMBER") == cardNumber) {
+            if (rs.getString("CARDNUMBER").equals(cardNumber)) {
                 if (rs.getInt("BALANCE") >= partPrice) {
                     LocalDate expDate = rs.getObject("EXPIRATIONDATE", LocalDate.class);
                     LocalDate currDate = LocalDate.now();

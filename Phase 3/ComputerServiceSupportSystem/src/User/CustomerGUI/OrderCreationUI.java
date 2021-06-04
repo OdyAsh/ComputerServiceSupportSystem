@@ -128,7 +128,6 @@ public class OrderCreationUI extends javax.swing.JFrame {
         cardNumberLabel.setText("Card number:");
         cardNumberLabel.setEnabled(false);
 
-        cardNumberField.setText("...");
         cardNumberField.setEnabled(false);
         cardNumberField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -248,16 +247,11 @@ public class OrderCreationUI extends javax.swing.JFrame {
     public String getPaymentMethod() {
         return cashOrCreditGroup.getSelection().getActionCommand();
     }
-    public int getCardNumber() throws MyException {
+    public String getCardNumber() throws MyException {
         if (cardNumberField.getText().equals("")) {
             throw new MyException("Please don't leave the field empty...");
         }
-        try {
-            int cn = Integer.parseInt(cardNumberField.getText());
-            return cn;
-        } catch (NumberFormatException nfe) {
-            throw new MyException("Please don't enter characters other than integers");
-        }
+        return cardNumberField.getText();
     }
     private void partNameFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partNameFieldFocusLost
         part = getPartInfo();
@@ -288,6 +282,7 @@ public class OrderCreationUI extends javax.swing.JFrame {
         creditRadioButton.setActionCommand(creditRadioButton.getText());
         cardNumberLabel.setEnabled(true);
         cardNumberField.setEnabled(true);
+        submitButton.setEnabled(true);
     }//GEN-LAST:event_creditRadioButtonActionPerformed
 
     private void cashRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cashRadioButtonActionPerformed
@@ -302,23 +297,23 @@ public class OrderCreationUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cardNumberFieldActionPerformed
 
     private void cardNumberFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cardNumberFieldFocusLost
-        try {
-            cardNumber = getCardNumber();
-            submitButton.setEnabled(true);
-        } catch (MyException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "invalid Input", JOptionPane.ERROR_MESSAGE);
-            submitButton.setEnabled(false);
-        }
+        
     }//GEN-LAST:event_cardNumberFieldFocusLost
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         paymentType = getPaymentMethod();
         if (paymentType.equals("Credit")) {
             try {
+                try {
+                    cardNumber = getCardNumber();
+                } catch (MyException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "invalid Input", JOptionPane.ERROR_MESSAGE);
+                }
                 notValidOrBalance = vp.checkCredit(vp.getPid(), cardNumber, price);
                 if (notValidOrBalance < 0) {
                     JOptionPane.showMessageDialog(this, vp.returnErrorMessage(), "Credit card issue", JOptionPane.ERROR_MESSAGE);
                 } else {
+                    JOptionPane.showMessageDialog(this, price + " have been withdrawn, current balance: " + notValidOrBalance);
                     String orderConfirmation = vo.createOrder(vo.getPid(), part, price);
                     orderConfirmation += "\nPlease visit the nearest branch to deliver us the part that you want to repair.";
                     JOptionPane.showMessageDialog(this, orderConfirmation, "Order Created!", JOptionPane.INFORMATION_MESSAGE);
@@ -332,7 +327,7 @@ public class OrderCreationUI extends javax.swing.JFrame {
                 orderConfirmation += "\nNote, since you're paying with cash, please visit the nearest branch \nto pay and give us the part that you want to repair.";
                 JOptionPane.showMessageDialog(this, orderConfirmation, "Order Created!", JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "There was a problem accessing the Bank's database, try later...", "Database problem", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "There was a problem accessing the orders database, try later...", "Database problem", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_submitButtonActionPerformed

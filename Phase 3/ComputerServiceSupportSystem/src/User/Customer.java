@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.time.LocalDate;
 
 /**
@@ -100,7 +101,6 @@ public class Customer extends Person {
                     ps.executeUpdate();
                     st.close();
                     ps.close();
-                    ;
                     return;
                 } else {
                     errorType = "Can't cancel, as the order has been assigned to a technician...";
@@ -118,7 +118,7 @@ public class Customer extends Person {
     
     public int createOrder(int customerId, String part, int partPrice) throws SQLException {
         Order o = new Order(customerId, part, partPrice);
-        String sql = "INSERT INTO ORDERS (ORDERID,CREATIONDATE,PRICE,COMPUTERPART,COMMENT,STATUS,TECHNICIANID,CUSTOMERID VALUES(?,?,?,?,NULL,Processing,NULL,?)";
+        String sql = "INSERT INTO ORDERS (ORDERID,CREATIONDATE,PRICE,COMPUTERPART,COMMENT,STATUS,TECHNICIANID,CUSTOMERID) VALUES (?,?,?,?,NULL,'Processing',NULL,?)";
         ps = conn.prepareStatement(sql);
         ps.setInt(1, o.getOrderId());
         ps.setObject(2, Date.valueOf(o.getCreationDate()));

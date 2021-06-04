@@ -48,24 +48,26 @@ public class Admin extends Person{
         try{
             Statement stmt = conncat.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT PID FROM PERSON ORDER BY PID DESC");
-            rs.first();
-            int id = rs.getInt("PID");
-            id += 1;
-            String addUser = "INSERT INTO PERSON (PID,NAME,ADDRESS) VALUES("+id+",'"+Name+"','"+Address+"')";
-            String addAccount = "INSERT INTO ACCOUNT (PID,USERNAME,EMAIL,PASSWORD,ACCOUNT_TYPE) VALUES("+id+",'"+Username+"','"+Email+"','"+Password+"','"+AccountType+"')";
-            stcat.executeUpdate(addUser);
-            stcat.executeUpdate(addAccount);
-            if(AccountType.equals("Customer")){
-                String addCust = "INSERT INTO CUSTOMER (PID) VALUES("+id+")";
-                stcat.executeUpdate(addCust);
-            }else{
-                String addTech = "INSERT INTO TECHNICIAN (PID,MAXCAPACITY,SALARY) VALUES("+id+",'"+ordersMaxCapacity+"','"+Salary+"')";
-                stcat.executeUpdate(addTech);
-        }
-            stcat.close();
-            
-            return true;
-        }catch(SQLException ex){
+            if (rs.next()) {
+                int id = rs.getInt("PID");
+                id += 1;
+                String addUser = "INSERT INTO PERSON (PID,NAME,ADDRESS) VALUES("+id+",'"+Name+"','"+Address+"')";
+                String addAccount = "INSERT INTO ACCOUNT (PID,USERNAME,EMAIL,PASSWORD,ACCOUNT_TYPE) VALUES("+id+",'"+Username+"','"+Email+"','"+Password+"','"+AccountType+"')";
+                stcat.executeUpdate(addUser);
+                stcat.executeUpdate(addAccount);
+                if(AccountType.equals("Customer")){
+                    String addCust = "INSERT INTO CUSTOMER (PID) VALUES("+id+")";
+                    stcat.executeUpdate(addCust);
+                }else{
+                    String addTech = "INSERT INTO TECHNICIAN (PID,MAXCAPACITY,SALARY) VALUES("+id+",'"+ordersMaxCapacity+"','"+Salary+"')";
+                    stcat.executeUpdate(addTech);
+                }
+                stcat.close();
+                return true;
+            } else {
+                return false;
+            }   
+        } catch(SQLException ex){
             return false;
         }
     }
@@ -83,12 +85,14 @@ public class Admin extends Person{
     public boolean searchAccounts(int id){
         try{
             String sqlIdentify = "SELECT PID,ACCOUNT_TYPE FROM ACCOUNT WHERE PID ="+id;
-            ResultSet pid = stcat.executeQuery(sqlIdentify);
-            pid.first();
-            int personId = pid.getInt("PID");
-            stcat.close();
-            
-            return personId == id;
+            ResultSet rs = stcat.executeQuery(sqlIdentify);
+            if (rs.next()) {
+                int personId = rs.getInt("PID");
+                stcat.close();
+                return personId == id;
+            } else {
+                return false;
+            }
         }catch(SQLException ex){
             return false;
         }

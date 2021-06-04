@@ -16,7 +16,7 @@ import java.time.LocalDate;
  */
 public class Credit {
     private int balance;
-    private int cardNumber;
+    private String cardNumber; //String, as int can't hold 16 digits!
     private int customerId;
     private int cvv;
     private LocalDate expDate;
@@ -25,11 +25,12 @@ public class Credit {
 
     public Credit() throws SQLException {
         conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
-        balance = cardNumber = customerId = cvv = 0;
+        balance = customerId = cvv = 0;
+        cardNumber = "";
         expDate = LocalDate.now();
     }
 
-    public Credit(int balance, int cardNumber, int customerId, int cvv, LocalDate expDate) throws SQLException {
+    public Credit(int balance, String cardNumber, int customerId, int cvv, LocalDate expDate) throws SQLException {
         conn = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
         this.balance = balance;
         this.cardNumber = cardNumber;
@@ -40,7 +41,6 @@ public class Credit {
     
     public int withdraw(int customerId, int partPrice) throws SQLException {
         String sql = "SELECT BALANCE FROM CREDIT WHERE CUSTOMERID=?";
-        int notValidOrBalance;
         ps = conn.prepareStatement(sql);
         ps.setInt(1, customerId);
         ResultSet rs = ps.executeQuery();
@@ -93,11 +93,11 @@ public class Credit {
         this.balance = balance;
     }
 
-    public int getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(int cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 

@@ -27,11 +27,17 @@ public class ValidateOrder {
     
     public ValidateOrder() throws SQLException {
         this.c = new Customer();
+        this.o = new Order();
     }
     
     public ValidateOrder(Customer c) throws SQLException {
         this.c = c;
-        conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem","csss","csss");
+        this.o = new Order();
+    }
+    
+    public ValidateOrder(Customer c, Order o) throws SQLException {
+        this.c = c;
+        this.o = o;
     }
     
     public int checkPartAvailability(String part) throws MyException, SQLException {

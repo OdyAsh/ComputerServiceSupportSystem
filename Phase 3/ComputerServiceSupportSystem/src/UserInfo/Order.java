@@ -4,6 +4,7 @@ import ExceptionHandling.MyException;
 import java.time.LocalDate;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,13 +38,19 @@ public class Order {
      */
     public Order() {
         try{    
-            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem");
+            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
             stcat = conncat.createStatement();
             System.out.println("Database connected successfully");
             query = "SELECT MAX(ORRDERID)FROM ORDERS";
             rs = stcat.executeQuery(query);
-            orderId = rs.getInt("ORDERID");
-            orderId += 1;    
+            if (rs.next()) {
+                orderId = rs.getInt("ORDERID");
+                orderId += 1; 
+            } else {
+                orderId = 0;
+                System.out.println("Error incrementing the orderId...");
+            }
+               
         } 
         catch (SQLException ex) {    
             System.out.println("Database connection failed");    
@@ -59,13 +66,18 @@ public class Order {
 
     public Order(int customerId, String compPart, int price) {
         try{
-            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem");
+            conncat = DriverManager.getConnection("jdbc:derby://localhost:1527/ComputerServiceSupportSystem", "csss", "csss");
             stcat = conncat.createStatement();
             System.out.println("Database connected successfully");
-            query = "SELECT MAX(ORRDERID)FROM ORDERS";
+            query = "SELECT MAX(ORDERID) AS MAXORDERID FROM ORDERS";
             rs = stcat.executeQuery(query);
-            orderId = rs.getInt("ORDERID");
-            orderId += 1;    
+            if (rs.next()) {
+                orderId = rs.getInt("MAXORDERID");
+                orderId += 1; 
+            } else {
+                orderId = 0;
+                System.out.println("Error incrementing the orderId...");
+            }
         } 
         catch (SQLException ex) {
             System.out.println("Database connection failed");    
@@ -77,6 +89,17 @@ public class Order {
         this.price = price;
         status = OrderStatus.Processing;
         technicianId = 0;
+    }
+    
+    public boolean updateComment(int orderId, String comment) throws SQLException {
+       query = "UPDATE ORDERS SET COMMENT =? WHERE ORDERID =?";
+       PreparedStatement prepStmt;
+       prepStmt = conncat.prepareStatement(query);
+       prepStmt.setString(1, comment);
+       prepStmt.setInt(2, orderId);
+       int isUpdated = prepStmt.executeUpdate();
+       prepStmt.close();
+       return isUpdated != 0;
     }
 
     
@@ -123,49 +146,56 @@ public class Order {
     }
     
     public int assignToTechnician(int orderId) throws SQLException {
+        System.out.println("1");
         String query2 = "SELECT PID FROM TECHNICIAN t1 WHERE PID NOT IN "
                 + "(SELECT TECHNICIANID FROM ORDERS, TECHNICIAN t2 WHERE TECHNICIANID = t2.PID)";
+        System.out.println("2");
         rs = stcat.executeQuery(query2);
+        System.out.println("3");
        
             if(rs.next()) {
-            int currentTechId = rs.getInt("PID");
-            query = "UPDATE ORDERS SET TECHNICIANID = " + currentTechId + " ,STATUS = 'InRepair' WHERE ORDERID = " + orderId;
-            stcat.executeUpdate(query);
-            setTechnicianId(currentTechId);
-            stcat.close();
-            return currentTechId;
-        }
-        else {
-                
-            ResultSet rs2 = null;
-            query = "SELECT TECHNICIANID FROM ORDERS WHERE TECHNICIANID IS NOT NULL";
-            rs2 = stcat.executeQuery(query);
-            int currentTechId;
-            int capacity;
-            ResultSet rs3 = null;
-            
-            while(rs2.next()) {
-                
-                currentTechId = rs2.getInt("TECHNICIANID");
-                query = "SELECT PID, MAXCAPACITY FROM TECHNICIAN, ORDERS WHERE TECHNICIANID = " + currentTechId;
-                rs3 = stcat.executeQuery(query);
-                capacity = rs.getInt("MAXCAPACITY");
-                rs3.last();
-                
-                if(rs3.getRow() < capacity) {
-                    
-                    query = "UPDATE ORDERS SET TECHNICIANID = " + currentTechId + " ,STATUS = 'InRepair' WHERE ORDERID = " + orderId;
-                    stcat.executeUpdate(query);
-                    setTechnicianId(currentTechId);
-                    stcat.close();
-                    this.status = OrderStatus.InRepair;
-                    return currentTechId;
-                    
-                }
-                
+                System.out.println("4");
+                int currentTechId = rs.getInt("PID");
+                System.out.println("5");
+                query = "UPDATE ORDERS SET TECHNICIANID = " + currentTechId + " ,STATUS = 'InRepair' WHERE ORDERID = " + orderId;
+                System.out.println("6");
+                stcat.executeUpdate(query);
+                System.out.println("7");
+                setTechnicianId(currentTechId);
+                stcat.close();
+                return currentTechId;
             }
-            return -1;
-        }
+        else {
+                ResultSet rs2 = null;
+                query = "SELECT TECHNICIANID FROM ORDERS WHERE TECHNICIANID IS NOT NULL";
+                System.out.println("8");
+                rs2 = stcat.executeQuery(query);
+                int currentTechId;
+                int capacity;
+                ResultSet rs3 = null;
+
+                while(rs2.next()) {
+
+                    currentTechId = rs2.getInt("TECHNICIANID");
+                    query = "SELECT PID, MAXCAPACITY FROM TECHNICIAN, ORDERS WHERE TECHNICIANID = " + currentTechId;
+                    rs3 = stcat.executeQuery(query);
+                    capacity = rs.getInt("MAXCAPACITY");
+                    rs3.last();
+
+                    if(rs3.getRow() < capacity) {
+
+                        query = "UPDATE ORDERS SET TECHNICIANID = " + currentTechId + " ,STATUS = 'InRepair' WHERE ORDERID = " + orderId;
+                        stcat.executeUpdate(query);
+                        setTechnicianId(currentTechId);
+                        stcat.close();
+                        this.status = OrderStatus.InRepair;
+                        return currentTechId;
+
+                    }
+
+                }
+                return -1;
+            }
     } 
 
     //Getters

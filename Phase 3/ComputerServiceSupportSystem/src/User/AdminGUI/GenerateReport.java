@@ -2,7 +2,8 @@
  * Group 1: Computer Service Support System (24)
  */
 package User.AdminGUI;
-
+import javax.swing.JTextField;
+import com.toedter.calendar.JDateChooser;
 import User.Admin;
 import UserInfo.Order;
 import java.text.SimpleDateFormat;
@@ -19,10 +20,10 @@ public class GenerateReport extends javax.swing.JFrame {
     AdminController currentUser;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate localDate;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String date;
     ArrayList<Order> testTemp;
     String value;
+    JDateChooser dateChooser;
     /**
      * Creates new form GenerateReport
      */
@@ -32,6 +33,8 @@ public class GenerateReport extends javax.swing.JFrame {
     public GenerateReport(Admin ad){
         currentUser = new AdminController(ad);
         initComponents();
+        date = ((JTextField)Date_chooser.getDateEditor().getUiComponent()).getText();
+
     }
 
     /**
@@ -53,6 +56,8 @@ public class GenerateReport extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Date");
+
+        Date_chooser.setDateFormatString("yyyy-MM-dd");
 
         jLabel2.setText("Status");
 
@@ -120,7 +125,6 @@ public class GenerateReport extends javax.swing.JFrame {
     }//GEN-LAST:event_CancelActionPerformed
 
     private void GenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateActionPerformed
-        date = sdf.format(Date_chooser.getDate());
         localDate = LocalDate.parse(date, formatter);
         value = Status.getSelectedItem().toString();
         if(localDate.equals("") || value.equals("")){
